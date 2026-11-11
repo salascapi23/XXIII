@@ -1,0 +1,23 @@
+</head>
+<body>
+  <a class="skip-link" href="#root">Saltar al contenido</a>
+
+  <div id="root">
+    <!-- Estado inicial mientras carga la app -->
+    <div class="loading" role="status" aria-live="polite">
+      <div class="spinner" aria-hidden="true"></div>
+      <span>Cargando ScoutPath…</span>
+    </div>
+  </div>
+
+  <noscript>
+    <div class="empty-state">
+      <div class="icon">⚠️</div>
+      <p>ScoutPath necesita JavaScript para funcionar. Actívalo en tu navegador y recarga la página.</p>
+    </div>
+  </noscript>
+
+  <!-- Aquí llamamos a nuestro archivo de JavaScript -->
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,363 @@
+<script>
+(function(){
+  var root=document.getElementById('root');
+  try{ iniciar(); }
+  catch(err){
+    // Si algo falla, se muestra el error en lugar de quedarse cargando
+    root.innerHTML='<div class="empty-state" role="alert"><div class="icon">⚠️</div><p>No se ha podido cargar ScoutPath.</p><p class="text-muted">'+String(err&&err.message||err)+'</p></div>';
+    console.error(err);
+  }
+
+  function iniciar(){
+    var RAMAS=[
+      {id:'castores',nombre:'Castores',icon:'🦫',edad:'6-8 años'},
+      {id:'lobatos',nombre:'Lobatos',icon:'🐺',edad:'8-11 años'},
+      {id:'scouts',nombre:'Scouts',icon:'🧭',edad:'11-14 años'},
+      {id:'pioneros',nombre:'Pioneros',icon:'🏕️',edad:'14-17 años'},
+      {id:'rutas',nombre:'Rutas',icon:'🥾',edad:'17-21 años'}
+    ];
+    var CURSOS=['2025-2026','2026-2027'];
+        var VISTAS=[
+      {id:'corcho',      icon:'📌', txt:'Corcho'},
+      {id:'ramas',       icon:'🌿', txt:'Ramas'},
+      {id:'educandos',   icon:'👥', txt:'Educandos'},
+      {id:'kraal',       icon:'🧑‍🤝‍🧑', txt:'Kraal'},
+      {id:'padres',      icon:'👨‍👩‍👧', txt:'Padres'},
+      {id:'viejoslobos', icon:'🐺', txt:'Viejos Lobos'}
+    ];
+    var CARGOS=[
+      {id:'jefatura',    nombre:'Jefatura',                  tipo:'Equipo de grupo', principal:true,  miembros:[]},
+      {id:'secretaria',  nombre:'Secretaría',                tipo:'Gestión',         principal:true,  miembros:[]},
+      {id:'tesoreria',   nombre:'Tesorería',                 tipo:'Gestión',         principal:true,  miembros:[]},
+      {id:'ap',          nombre:'AP · Animación Pedagógica', tipo:'Animación',       principal:false, miembros:[]},
+      {id:'af',          nombre:'AF · Animación de Fe',      tipo:'Animación',       principal:false, miembros:[]},
+      {id:'imagen',      nombre:'Imagen',                    tipo:'Comunicación',    principal:false, miembros:[]},
+      {id:'intendencia', nombre:'Intendencia',               tipo:'Logística',       principal:false, miembros:[]},
+      {id:'relaciones',  nombre:'Relaciones externas',       tipo:'Comunicación',    principal:false, miembros:[]}
+    ];
+    var KEY='scoutpath-v1';
+
+    function uid(){return Math.random().toString(36).slice(2,9);}
+    function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+    function rama(id){return RAMAS.filter(function(r){return r.id===id;})[0]||RAMAS[0];}
+
+    function demo(){
+      return {
+        curso:'2026-2027',
+        notas:[
+          {id:uid(),curso:'2026-2027',rama:'scouts',titulo:'Acampada de otoño',texto:'Salida el viernes a las 17:00. Traer saco, esterilla y linterna.',fecha:'22 oct'},
+          {id:uid(),curso:'2026-2027',rama:'lobatos',titulo:'Reunión de familias',texto:'Sábado a las 11:00 en el local. Hablaremos de la ronda solar.',fecha:'20 oct'},
+          {id:uid(),curso:'2026-2027',rama:'rutas',titulo:'Servicio en el banco de alimentos',texto:'Turno de tarde, confirmar asistencia antes del jueves.',fecha:'18 oct'}
+        ],
+        educandos:[],
+         padres:[],
+        viejoslobos:[],
+        misiones:[]
+      };
+    }
+    function cargar(){
+      try{var s=localStorage.getItem(KEY);if(s)return JSON.parse(s);}catch(e){}
+      return demo();
+    }
+    function guardar(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+
+    var S=cargar();
+    var vista='corcho';
+    var filtroRama='todas';
+
+    var modalRoot=document.createElement('div');
+    var toastRoot=document.createElement('div');
+    toastRoot.className='toast-wrap';
+    toastRoot.setAttribute('role','status');
+    toastRoot.setAttribute('aria-live','polite');
+    document.body.appendChild(modalRoot);
+    document.body.appendChild(toastRoot);
+
+    function toast(msg,error){
+      var t=document.createElement('div');
+      t.className='toast'+(error?' error':'');
+      t.textContent=msg;
+      toastRoot.appendChild(t);
+      setTimeout(function(){t.remove();},2800);
+    }
+
+    function delCurso(lista){return lista.filter(function(x){return x.curso===S.curso;});}
+
+    /* ===== VISTAS ===== */
+        function vCorcho(){
+      var notas=delCurso(S.notas);
+      var misiones=S.misiones||[];
+
+      var h='<h1 class="page-title">Grupo Beta</h1>'
+        +'<p class="page-subtitle">Panel de organización del grupo scout.</p>';
+
+      // 1. Esquema visual (Pestañas)
+      h+='<div class="inicio-esquema">';
+      h+='<div class="esquema-tab kraal" data-act="vista" data-id="kraal" style="cursor:pointer"><div class="esquema-tab-header"><h2 class="esquema-tab-title">🧑‍🤝‍🧑 Kraal</h2><span class="text-muted">➔</span></div><p class="esquema-tab-desc">Equipo general de responsables.</p></div>';
+      h+='<div class="esquema-tab jefatura" data-act="vista" data-id="kraal" style="cursor:pointer"><div class="esquema-tab-header"><h2 class="esquema-tab-title">⭐ Jefatura</h2><span class="text-muted">➔</span></div><p class="esquema-tab-desc">Dirección del grupo (Jefatura, Secretaría, Tesorería).</p></div>';
+      h+='<div class="esquema-tab viejos" data-act="vista" data-id="viejoslobos" style="cursor:pointer"><div class="esquema-tab-header"><h2 class="esquema-tab-title">🐺 Viejos Lobos</h2><span class="text-muted">➔</span></div><p class="esquema-tab-desc">Antiguos miembros y veteranos del grupo.</p></div>';
+      h+='<div class="esquema-tab ramas" data-act="vista" data-id="ramas" style="cursor:pointer"><div class="esquema-tab-header"><h2 class="esquema-tab-title">🌿 Ramas</h2><span class="text-muted">➔</span></div><p class="esquema-tab-desc">Responsables de Castores, Lobatos, Scouts, Pioneros y Rutas.</p></div>';
+      h+='<div class="esquema-tab padres" data-act="vista" data-id="padres" style="cursor:pointer"><div class="esquema-tab-header"><h2 class="esquema-tab-title">👨‍👩‍👧 Padres</h2><span class="text-muted">➔</span></div><p class="esquema-tab-desc">Representantes de las familias del grupo.</p></div>';
+      h+='</div>';
+
+      // 2. Tablón de Misiones
+      h+='<div class="card mt-16"><div class="card-header"><h2 class="card-title">🎯 Tablón de misiones y pendientes</h2>'
+        +'<button class="btn-primary" data-act="nueva-mision">Nueva misión</button></div>';
+      if(!misiones.length) {
+        h+='<p class="text-muted" style="font-size:13px;margin:0;">No hay misiones pendientes. ¡Buen trabajo!</p>';
+      } else {
+        h+='<ul class="misiones-lista">';
+        misiones.forEach(function(m){
+          h+='<li class="mision-item'+(m.completada?' completada':'')+'">'
+            +'<input type="checkbox" class="mision-check" data-act="toggle-mision" data-id="'+esc(m.id)+'"'+(m.completada?' checked':'')+'>'
+            +'<span class="mision-txt">'+esc(m.texto)+'</span>'
+            +'<button class="mision-borrar" data-act="borrar-mision" data-id="'+esc(m.id)+'" aria-label="Borrar misión">✕</button>'
+            +'</li>';
+        });
+        h+='</ul>';
+      }
+      h+='</div>';
+
+      // 3. Calendario
+      var hoy = new Date();
+      var diasSemana = ['L','M','X','J','V','S','D'];
+      h+='<div class="card mt-16"><div class="card-header"><h2 class="card-title">📅 Calendario</h2></div><div class="calendario-box">';
+      diasSemana.forEach(function(d){ h+='<div class="dia-semana">'+d+'</div>'; });
+      var primerDia = new Date(hoy.getFullYear(), hoy.getMonth(), 1).getDay();
+      var offset = (primerDia === 0) ? 6 : primerDia - 1; 
+      var diasMes = new Date(hoy.getFullYear(), hoy.getMonth()+1, 0).getDate();
+      for(var i=0; i<offset; i++) { h+='<div class="dia vacio"></div>'; }
+      for(var i=1; i<=diasMes; i++) {
+        h+='<div class="dia'+(i === hoy.getDate()?' hoy':'')+'">'+i+'</div>';
+      }
+      h+='</div></div>';
+
+      // 4. Tablón de notas (Corcho original)
+      h+='<h2 class="section-title mt-16">📌 Tablón de avisos</h2>';
+      h+='<div class="mb-16"><button class="btn-primary" data-act="nueva-nota">Nueva nota</button></div>';
+      if(!notas.length){
+        h+='<div class="card empty-state"><div class="icon">📌</div><p>Aún no hay notas en este curso.</p></div>';
+      } else {
+        h+='<div class="corcho-wrap"><h2 class="corcho-title"><span aria-hidden="true">📌</span> Corcho</h2><div class="notes-grid">';
+        notas.forEach(function(n){
+          var r=rama(n.rama);
+          h+='<article class="sticky"><span class="pin" aria-hidden="true">📍</span><span class="sticky-badge">'+esc(r.nombre)+'</span>'
+            +'<h4>'+esc(n.titulo)+'</h4><p>'+esc(n.texto)+'</p>'
+            +'<span class="meta">'+esc(r.nombre)+'</span><span class="time">'+esc(n.fecha)+'</span>'
+            +'<button class="btn-secondary mt-16" data-act="borrar-nota" data-id="'+esc(n.id)+'" aria-label="Borrar nota '+esc(n.titulo)+'">Borrar</button></article>';
+        });
+        h+='</div></div>';
+      }
+      
+      return h;
+    }
+
+    function vRamas(){
+      var h='<h1 class="page-title">Ramas</h1><p class="page-subtitle">Elige una rama para ver a sus educandos.</p><div class="ramas-grid">';
+      RAMAS.forEach(function(r){
+        var n=delCurso(S.educandos).filter(function(e){return e.rama===r.id;}).length;
+        h+='<button class="rama-card" data-rama="'+r.id+'" data-act="ver-rama" data-id="'+r.id+'">'
+          +'<div class="rama-header"><div class="icon" aria-hidden="true">'+r.icon+'</div><h3>'+r.nombre+'</h3></div>'
+          +'<div class="rama-body"><div class="info-line"><span class="lbl">Edad</span><span class="val">'+r.edad+'</span></div>'
+          +'<div class="info-line"><span class="lbl">Educandos</span><span class="val">'+n+'</span></div></div></button>';
+      });
+      return h+'</div>';
+    }
+
+    function vEducandos(){
+      var lista=delCurso(S.educandos).filter(function(e){return filtroRama==='todas'||e.rama===filtroRama;});
+      var h='<h1 class="page-title">Educandos</h1><p class="page-subtitle">Curso '+esc(S.curso)+'.</p>';
+      h+='<div class="card"><div class="card-header"><h2 class="card-title">Listado ('+lista.length+')</h2><div class="flex gap-8">'
+        +'<label class="sr-only" for="f-rama">Filtrar por rama</label><select id="f-rama" class="btn-secondary" data-act="filtro">'
+        +'<option value="todas">Todas las ramas</option>';
+      RAMAS.forEach(function(r){h+='<option value="'+r.id+'"'+(filtroRama===r.id?' selected':'')+'>'+r.nombre+'</option>';});
+      h+='</select><button class="btn-green" data-act="nuevo-educando">Añadir educando</button></div></div>';
+      if(!lista.length){
+        h+='<div class="empty-state"><div class="icon">👥</div><p>No hay educandos con este filtro. Añade el primero.</p></div>';
+      }else{
+        h+='<div class="tabla-wrap"><table class="tabla"><thead><tr><th>Nombre</th><th>Rama</th><th>Contacto</th><th><span class="sr-only">Acciones</span></th></tr></thead><tbody>';
+        lista.forEach(function(e){
+          h+='<tr><td>'+esc(e.nombre)+'</td><td><span class="badge badge-azul">'+esc(rama(e.rama).nombre)+'</span></td><td>'+esc(e.contacto)+'</td>'
+            +'<td><button class="btn-danger" data-act="borrar-educando" data-id="'+esc(e.id)+'" aria-label="Borrar a '+esc(e.nombre)+'">Borrar</button></td></tr>';
+        });
+        h+='</tbody></table></div>';
+      }
+      return h+'</div>';
+    }
+    function vKraal(){
+      var principales=CARGOS.filter(function(c){return c.principal;});
+      var resto=CARGOS.filter(function(c){return !c.principal;});
+      function tarjeta(c){
+        var h='<article class="cargo-card'+(c.principal?' principal':'')+'" data-cargo="'+c.id+'">'
+          +(c.principal?'<span class="cargo-badge">Principal</span>':'')
+          +'<div class="cargo-head"><span class="cargo-tipo">'+esc(c.tipo)+'</span><h3>'+esc(c.nombre)+'</h3></div>'
+          +'<div class="cargo-body">';
+        if(!c.miembros.length){
+          h+='<p class="cargo-vacio">Sin asignar</p>';
+        }else{
+          h+='<ul>';
+          c.miembros.forEach(function(m){h+='<li>'+esc(m)+'</li>';});
+          h+='</ul>';
+        }
+        return h+'</div></article>';
+      }
+      var h='<h1 class="page-title">Kraal del grupo</h1>'
+        +'<p class="page-subtitle">Equipo de responsables del Grupo Beta.</p>';
+      h+='<h2 class="section-title">⭐ Cargos principales</h2><div class="cargos-grid mb-24">';
+      principales.forEach(function(c){h+=tarjeta(c);});
+      h+='</div><h2 class="section-title">🔹 Resto del kraal</h2><div class="cargos-grid">';
+      resto.forEach(function(c){h+=tarjeta(c);});
+      return h+'</div>';
+    }
+
+    function vPadres(){
+      var lista=S.padres||[];
+      var h='<h1 class="page-title">Padres</h1>'
+        +'<p class="page-subtitle">Familias vinculadas a las ramas del grupo.</p>'
+        +'<div class="card"><div class="card-header"><h2 class="card-title">Listado ('+lista.length+')</h2></div>';
+      if(!lista.length){
+        h+='<div class="empty-state"><div class="icon">👨‍👩‍👧</div><p>No hay familias registradas todavía.</p></div>';
+      }else{
+        h+='<div class="tabla-wrap"><table class="tabla"><thead><tr>'
+          +'<th>Nombre</th><th>Hijo/a</th><th>Rama</th><th>Contacto</th></tr></thead><tbody>';
+        lista.forEach(function(p){
+          h+='<tr><td>'+esc(p.nombre)+'</td><td>'+esc(p.hijo)+'</td>'
+            +'<td><span class="badge badge-azul">'+esc(rama(p.rama).nombre)+'</span></td>'
+            +'<td>'+esc(p.contacto)+'</td></tr>';
+        });
+        h+='</tbody></table></div>';
+      }
+      return h+'</div>';
+    }
+
+    function vViejosLobos(){
+      var lista=S.viejoslobos||[];
+      var h='<h1 class="page-title">Viejos Lobos</h1>'
+        +'<p class="page-subtitle">Antiguos miembros del Grupo Beta.</p>'
+        +'<div class="card"><div class="card-header"><h2 class="card-title">Listado ('+lista.length+')</h2></div>';
+      if(!lista.length){
+        h+='<div class="empty-state"><div class="icon">🐺</div><p>No hay viejos lobos registrados todavía.</p></div>';
+      }else{
+        h+='<div class="tabla-wrap"><table class="tabla"><thead><tr>'
+          +'<th>Nombre</th><th>Promoción</th><th>Contacto</th><th>Estado</th></tr></thead><tbody>';
+        lista.forEach(function(v){
+          h+='<tr><td>'+esc(v.nombre)+'</td><td>'+esc(v.promocion)+'</td><td>'+esc(v.contacto)+'</td>'
+            +'<td>'+(v.activo
+                ?'<span class="badge badge-verde">Activo</span>'
+                :'<span class="badge badge-amarillo">Inactivo</span>')+'</td></tr>';
+        });
+        h+='</tbody></table></div>';
+      }
+      return h+'</div>';
+    }
+    /* ===== MARCO + RENDER ===== */
+    function render(){
+      var h='<header class="header"><div class="logo"><div class="logo-icon" aria-hidden="true">🍃</div><span>ScoutPath</span><span class="logo-sub">GRUPO BETA</span></div>'
+        +'<div class="header-right"><div class="session-select"><label for="curso"><span>Curso</span></label><select id="curso" data-act="curso">';
+      CURSOS.forEach(function(c){h+='<option'+(c===S.curso?' selected':'')+'>'+c+'</option>';});
+      h+='</select></div><div class="avatar" aria-hidden="true">GB</div></div></header>'
+        +'<div class="app-body"><nav class="sidebar" aria-label="Principal">';
+      VISTAS.forEach(function(v){
+        h+='<button class="sidebar-item'+(v.id===vista?' active':'')+'" data-act="vista" data-id="'+v.id+'"'+(v.id===vista?' aria-current="page"':'')+'><span class="icon" aria-hidden="true">'+v.icon+'</span>'+v.txt+'</button>';
+      });
+      h+='</nav><main class="main-panel">';
+      h+= vista==='corcho'?vCorcho()
+         : vista==='ramas'?vRamas()
+         : vista==='kraal'?vKraal()
+         : vista==='padres'?vPadres()
+         : vista==='viejoslobos'?vViejosLobos()
+         : vEducandos();
+      h+='</main></div>';
+      root.innerHTML=h;
+    }
+
+    /* ===== MODALES ===== */
+    function opcionesRama(sel){
+      return RAMAS.map(function(r){return '<option value="'+r.id+'"'+(r.id===sel?' selected':'')+'>'+r.nombre+'</option>';}).join('');
+    }
+    function abrirModal(titulo,campos,tipo){
+      modalRoot.innerHTML='<div class="modal-backdrop" data-act="cerrar-fondo"><form class="modal" role="dialog" aria-modal="true" aria-labelledby="mt" data-tipo="'+tipo+'">'
+        +'<h2 class="modal-title" id="mt">'+titulo+'</h2>'+campos
+        +'<div class="modal-actions"><button type="button" class="btn-secondary" data-act="cerrar">Cancelar</button><button type="submit" class="btn-primary">Guardar</button></div></form></div>';
+      var primero=modalRoot.querySelector('input,textarea,select');
+      if(primero)primero.focus();
+    }
+    function cerrarModal(){modalRoot.innerHTML='';}
+
+    function modalNota(){
+      abrirModal('Nueva nota',
+        '<div class="field"><label for="n-t">Título</label><input id="n-t" name="titulo" required maxlength="60"></div>'
+        +'<div class="field"><label for="n-x">Mensaje</label><textarea id="n-x" name="texto" required maxlength="240"></textarea></div>'
+        +'<div class="field"><label for="n-r">Rama</label><select id="n-r" name="rama">'+opcionesRama('scouts')+'</select></div>','nota');
+    }
+    function modalMision(){
+      abrirModal('Nueva misión',
+        '<div class="field"><label for="m-t">¿Qué hay que hacer?</label><input id="m-t" name="texto" required maxlength="80" placeholder="Ej: Comprar material"></div>','mision');
+    }
+    function modalEducando(){
+      abrirModal('Añadir educando',
+        '<div class="field"><label for="e-n">Nombre completo</label><input id="e-n" name="nombre" required maxlength="80"></div>'
+        +'<div class="field"><label for="e-r">Rama</label><select id="e-r" name="rama">'+opcionesRama(filtroRama==='todas'?'castores':filtroRama)+'</select></div>'
+        +'<div class="field"><label for="e-c">Teléfono de contacto</label><input id="e-c" name="contacto" type="tel" maxlength="30"></div>','educando');
+    }
+
+    /* ===== EVENTOS ===== */
+    document.addEventListener('click',function(ev){
+      var el=ev.target.closest('[data-act]');
+      if(!el)return;
+      var act=el.getAttribute('data-act'),id=el.getAttribute('data-id');
+      if(act==='cerrar-fondo'){if(ev.target===el)cerrarModal();return;}
+      if(act==='cerrar'){cerrarModal();return;}
+      if(act==='vista'){vista=id;render();return;}
+      if(act==='ver-rama'){filtroRama=id;vista='educandos';render();return;}
+      if(act==='nueva-nota'){modalNota();return;}
+      if(act==='nueva-mision'){modalMision();return;}
+      if(act==='borrar-mision'){ S.misiones=S.misiones.filter(function(m){return m.id!==id;}); guardar();render();toast('Misión eliminada');return; }
+      if(act==='nuevo-educando'){modalEducando();return;}
+      if(act==='borrar-nota'){
+        S.notas=S.notas.filter(function(n){return n.id!==id;});
+        guardar();render();toast('Nota borrada');return;
+      }
+      if(act==='borrar-educando'){
+        S.educandos=S.educandos.filter(function(e){return e.id!==id;});
+        guardar();render();toast('Educando borrado');return;
+      }
+    });
+    document.addEventListener('change',function(ev){
+      var el=ev.target.closest('[data-act]');
+      if(!el)return;
+      var act=el.getAttribute('data-act');
+      if(act==='curso'){S.curso=el.value;guardar();render();}
+      if(act==='filtro'){filtroRama=el.value;render();}
+      if(act==='toggle-mision'){ var m=S.misiones.find(function(x){return x.id===el.getAttribute('data-id');}); if(m){ m.completada=el.checked; guardar(); render(); } }
+    });
+    document.addEventListener('submit',function(ev){
+      var f=ev.target;
+      if(!f.matches('form[data-tipo]'))return;
+      ev.preventDefault();
+      var d=new FormData(f);
+           if(f.getAttribute('data-tipo')==='nota'){
+        S.notas.unshift({id:uid(),curso:S.curso,rama:d.get('rama'),titulo:String(d.get('titulo')).trim(),texto:String(d.get('texto')).trim(),
+          fecha:new Date().toLocaleDateString('es-ES',{day:'numeric',month:'short'})});
+        toast('Nota publicada');
+      } else if(f.getAttribute('data-tipo')==='mision') {
+        S.misiones.unshift({id:uid(), texto:String(d.get('texto')).trim(), completada:false});
+        toast('Misión añadida');
+      }  else {
+        S.educandos.push({id:uid(),curso:S.curso,nombre:String(d.get('nombre')).trim(),rama:d.get('rama'),contacto:String(d.get('contacto')||'').trim()});
+        toast('Educando añadido');
+      }
+{
+        S.educandos.push({id:uid(),curso:S.curso,nombre:String(d.get('nombre')).trim(),rama:d.get('rama'),contacto:String(d.get('contacto')||'').trim()});
+        toast('Educando añadido');
+      }
+      guardar();cerrarModal();render();
+    });
+    document.addEventListener('keydown',function(ev){
+      if(ev.key==='Escape'&&modalRoot.firstChild)cerrarModal();
+    });
+
+    render();
+  }
+})();
+</script>
