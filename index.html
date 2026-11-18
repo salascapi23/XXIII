@@ -1,0 +1,970 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ScoutPath · Grupo Beta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+/* =====================================================================
+   SCOUTPATH - ESTILOS UNIFICADOS
+   ===================================================================== */
+:root{
+  --azul-900:#0F172A; --azul-800:#1E3A8A; --azul-700:#1E40AF; --azul-600:#2563EB; --azul-500:#3B82F6; --azul-300:#93C5FD; --azul-100:#DBEAFE;
+  --verde-800:#14532D; --verde-700:#15803D; --verde-600:#16A34A; --verde-500:#22C55E; --verde-300:#86EFAC; --verde-100:#D1FAE5;
+  --blanco:#FFFFFF; --gris-50:#F9FAFB; --gris-100:#F3F4F6; --gris-300:#D1D5DB; --gris-500:#6B7280; --gris-700:#374151; --gris-900:#111827;
+  --corcho:#CDA46A; --corcho-dark:#B8894F; --wood:#5B3A22; --wood-dark:#402716;
+  --rojo:#B91C1C; --rojo-100:#FEE2E2; --amarillo:#B45309; --amarillo-100:#FEF3C7;
+  --campo-1:#2E7D46; --campo-2:#1E5631; --campo-3:#143D21; --oro-1:#F7E08A; --oro-2:#B8860B;
+  
+  --font-display:'Baloo 2','Inter',system-ui,sans-serif;
+  --font-body:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+
+  --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px; --space-5:24px; --space-6:32px;
+  --radius-sm:8px; --radius-md:12px; --radius-lg:16px; --radius-pill:999px;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.08); --shadow-md:0 2px 8px rgba(0,0,0,.08); --shadow-lg:0 8px 20px rgba(0,0,0,.14);
+  
+  --carta-w:90px; --carta-h:130px;
+  --z-sidebar:30; --z-header:40; --z-modal:60; --z-toast:80;
+  --header-h:61px; --bottombar-h:64px;
+}
+
+*,*::before,*::after{box-sizing:border-box;}
+html,body{margin:0;padding:0;height:100%;}
+body{font-family:var(--font-body); background:var(--gris-50); color:var(--gris-900); line-height:1.4; -webkit-font-smoothing:antialiased;}
+button{font-family:inherit;cursor:pointer;}
+input,select,textarea{font-family:inherit;}
+
+/* HEADER */
+.header{background:var(--blanco); border-bottom:2px solid var(--azul-800); padding:var(--space-3) var(--space-5); display:flex; align-items:center; justify-content:space-between; gap:var(--space-3); position:sticky; top:0; z-index:var(--z-header); box-shadow:var(--shadow-sm);}
+.logo{display:flex; align-items:center; gap:10px; font-family:var(--font-display); font-weight:800; font-size:20px; color:var(--azul-800);}
+.logo-icon{width:36px; height:36px; border-radius:10px; background:linear-gradient(180deg,var(--azul-600),var(--azul-800)); display:flex; align-items:center; justify-content:center; color:#fff; font-size:18px;}
+.logo-sub{font-size:11px; font-weight:600; color:var(--verde-700); letter-spacing:.05em; margin-left:var(--space-1);}
+.header-right{display:flex; align-items:center; gap:var(--space-3);}
+.session-select{display:flex; align-items:center; gap:var(--space-2); font-size:12.5px; color:var(--gris-700);}
+.session-select select{border:1.5px solid var(--azul-800); border-radius:var(--radius-sm); padding:7px 10px; font-size:12.5px; background:#fff; color:var(--azul-800); font-weight:600; cursor:pointer;}
+.avatar{width:36px; height:36px; border-radius:50%; background:var(--azul-600); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px;}
+
+/* LAYOUT */
+.app-body{display:flex; min-height:calc(100vh - var(--header-h));}
+.sidebar{background:var(--azul-800); color:#fff; width:240px; flex-shrink:0; padding:var(--space-4) 0; display:flex; flex-direction:column; position:sticky; top:var(--header-h); height:calc(100vh - var(--header-h));}
+.sidebar-item{display:flex; align-items:center; gap:var(--space-3); width:100%; padding:14px var(--space-5); font-size:14px; font-weight:600; color:#e0e7ff; background:none; border:none; border-left:4px solid transparent; text-align:left; cursor:pointer; transition:background .15s;}
+.sidebar-item:hover{background:rgba(255,255,255,.08); color:#fff;}
+.sidebar-item.active{background:rgba(255,255,255,.15); color:#fff; border-left-color:var(--verde-500);}
+.sidebar-item .icon{font-size:18px;}
+.main-panel{flex:1; min-width:0; padding:var(--space-6);}
+
+/* TÍTULOS */
+.page-title{font-family:var(--font-display); font-weight:800; font-size:28px; color:var(--azul-800); margin:0 0 6px;}
+.page-subtitle{font-size:14px; color:var(--gris-500); margin:0 0 var(--space-5);}
+.section-title{font-family:var(--font-display); font-weight:700; font-size:20px; color:var(--azul-800); margin:0 0 var(--space-4);}
+
+/* CARDS Y BOTONES */
+.card{background:var(--blanco); border-radius:var(--radius-lg); padding:20px; box-shadow:var(--shadow-sm); margin-bottom:var(--space-4);}
+.card-header{display:flex; justify-content:space-between; align-items:center; gap:var(--space-3); margin-bottom:14px;}
+.card-title{font-family:var(--font-display); font-weight:700; font-size:16px; color:var(--azul-800); margin:0;}
+.btn-primary{background:var(--azul-700); color:#fff; border:none; padding:10px 18px; border-radius:10px; font-weight:700; font-size:13px;}
+.btn-primary:hover{background:var(--azul-800);}
+.btn-secondary{background:var(--blanco); color:var(--azul-800); border:1.5px solid var(--azul-300); padding:8px var(--space-4); border-radius:10px; font-weight:700; font-size:12.5px;}
+.btn-secondary:hover{background:var(--azul-100);}
+.btn-danger{background:var(--rojo); color:#fff; border:none; padding:5px 10px; border-radius:6px; font-size:12px;}
+
+/* EL CAMPO */
+.campo-scout{
+  position:relative; display:flex; flex-direction:column; gap:var(--space-6); padding:var(--space-5) var(--space-4);
+  border:10px solid var(--wood); outline:2px solid var(--wood-dark); border-radius:var(--radius-lg);
+  background-color:var(--campo-2);
+  background-image: linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px), linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px), radial-gradient(ellipse at 50% 0%,var(--campo-1) 0%,var(--campo-2) 55%,var(--campo-3) 100%);
+  background-size:24px 24px,24px 24px,auto;
+  box-shadow:0 10px 25px rgba(60,35,10,.3), inset 0 0 40px rgba(0,0,0,.55);
+  overflow-x:auto;
+}
+.fila-campo{display:flex; flex-wrap:wrap; justify-content:center; align-items:flex-start; gap:var(--space-3) 15px;}
+.fila-campo.paralelo{justify-content:space-between; align-items:flex-start; gap:var(--space-5) 30px;}
+
+/* LA CARTA */
+.carta-scout{
+  position:relative; flex:0 0 auto; overflow:hidden;
+  width:var(--carta-w); height:var(--carta-h);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding:6px 5px; text-align:center; color:#1F2937;
+  border:3px solid transparent; border-radius:10px;
+  background: linear-gradient(160deg, var(--c1, #FDFBFB) 0%, var(--c2, #E5E7EB) 100%) padding-box, linear-gradient(160deg, var(--b1, var(--oro-1)) 0%, var(--b2, var(--oro-2)) 100%) border-box;
+  box-shadow:0 8px 14px rgba(0,0,0,.45);
+  cursor:pointer; transition:transform .2s;
+}
+.carta-scout:hover{transform:translateY(-5px) scale(1.05); z-index:10;}
+
+.carta-scout[data-rama="castores"]   {--c1:#FFEDD5; --c2:#FB923C; --b1:#FDBA74; --b2:#C2410C;}
+.carta-scout[data-rama="lobatos"]    {--c1:#FEF9C3; --c2:#FACC15; --b1:#FDE047; --b2:#A16207;}
+.carta-scout[data-rama="scouts"]     {--c1:#E0F2FE; --c2:#38BDF8; --b1:#7DD3FC; --b2:#0369A1;}
+.carta-scout[data-rama="pioneros"]   {--c1:#FEE2E2; --c2:#F87171; --b1:#FCA5A5; --b2:#991B1B;}
+.carta-scout[data-rama="rutas"]      {--c1:#BBF7D0; --c2:#3F9D63; --b1:#4ADE80; --b2:#14532D;}
+.carta-scout[data-rama="kraal"]      {--c1:#E0E7FF; --c2:#818CF8; --b1:#A5B4FC; --b2:#312E81;}
+.carta-scout[data-rama="padres"]     {--c1:#F5F5DC; --c2:#C9A77C; --b1:#D2B48C; --b2:#6F4518;}
+.carta-scout[data-rama="viejoslobos"]{--c1:#F3F4F6; --c2:#9CA3AF; --b1:#D1D5DB; --b2:#374151;}
+
+.carta-icono{font-size:32px; margin-bottom:4px; filter:drop-shadow(0 2px 2px rgba(0,0,0,.3));}
+.carta-nombre{width:100%; font-size:10px; font-weight:800; text-transform:uppercase; line-height:1.1;}
+.carta-rama-txt{font-size:8px; font-weight:700; text-transform:uppercase; opacity:0.8;}
+
+.lista-nombres{display:flex; flex-direction:column; width:100%; padding:0 2px; margin-top:2px; gap:2px;}
+.lista-nombres span{display:block; width:100%; text-align:center; font-size:9px; font-weight:800; color:#111827; line-height:1.1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+
+.titulo-cargo-fuera{color:#FFFFFF; font-size:12px; font-weight:800; text-transform:uppercase; text-align:center; margin-top:6px; text-shadow:0 2px 4px rgba(0,0,0,0.9);}
+
+/* PANTALLA PRINCIPAL 2 COLUMNAS */
+.home-grid{display:grid; grid-template-columns:34% 1fr; gap:var(--space-5); align-items:start;}
+.home-col-izq,.home-col-der{min-width:0;}
+.corcho-box{background:var(--corcho); border:10px solid var(--wood); border-radius:var(--radius-lg); padding:var(--space-4); min-height:520px; box-shadow:var(--shadow-lg);}
+.corcho-box h2{font-family:var(--font-display); font-weight:800; font-size:20px; color:var(--wood-dark); margin:0 0 var(--space-3);}
+
+/* CAMPO: 4 COLUMNAS */
+.campo-h{--carta-w:84px; --carta-h:66px; display:grid; grid-template-columns:repeat(4,1fr); grid-template-rows:auto auto auto; gap:var(--space-4) var(--space-3); padding:var(--space-4) var(--space-3); justify-items:center;}
+.campo-h .carta-icono{font-size:20px; margin-bottom:1px;}
+.campo-h .carta-nombre{font-size:8px;}
+.campo-h .lista-nombres span{font-size:8px;}
+.campo-h .titulo-cargo-fuera{font-size:9px; margin-top:3px;}
+.col-campo{display:flex; flex-direction:column; align-items:center; gap:8px;}
+.pos-lobos{grid-column:1 / span 2; grid-row:1; transform:translateX(18px);}
+.pos-padres{grid-column:3 / span 2; grid-row:3;}
+.celda{display:flex; flex-direction:column; align-items:center;}
+.nombre-negrita{font-weight:900 !important;}
+
+/* CORCHO */
+.corcho-actor{display:flex; flex-direction:column; gap:4px; margin-bottom:var(--space-3);}
+.corcho-actor label{font-size:11px; font-weight:800; color:var(--wood-dark); text-transform:uppercase;}
+.corcho-actor select{padding:8px 10px; border:2px solid var(--wood); border-radius:var(--radius-sm); background:#FFF8EA; font-weight:700; font-size:13px; color:var(--wood-dark);}
+.corcho-tabs{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:var(--space-3);}
+.corcho-tab{flex:0 0 auto; border:none; padding:6px 14px; border-radius:var(--radius-pill); background:var(--corcho-dark); color:#fff; font-size:17px; cursor:pointer;}
+.corcho-tab.active{background:var(--wood-dark);}
+.postit{position:relative; padding:12px 12px 10px; margin-bottom:14px; border-radius:6px; background:#FAF3E3; box-shadow:0 4px 10px rgba(0,0,0,.25); transform:rotate(-0.6deg);}
+.postit:nth-child(even){transform:rotate(.7deg);}
+.postit[data-c="grupo"]{background:#FAF3E3;}
+.postit[data-c="comision"]{background:#EDE9FE;}
+.postit[data-c="castores"]{background:#FFEDD5;}
+.postit[data-c="lobatos"]{background:#FEF9C3;}
+.postit[data-c="scouts"]{background:#E0F2FE;}
+.postit[data-c="pioneros"]{background:#FEE2E2;}
+.postit[data-c="rutas"]{background:#BBF7D0;}
+.postit.abierta{z-index:20;}
+.postit-menu{position:absolute; top:6px; right:6px; z-index:5;}
+.postit-del{border:none; background:rgba(0,0,0,.08); border-radius:50%; width:24px; height:24px; font-size:16px; font-weight:900; line-height:1; cursor:pointer;}
+.postit-del:hover{background:rgba(0,0,0,.18);}
+.menu-pop{position:absolute; right:0; top:28px; background:#fff; border-radius:var(--radius-sm); box-shadow:var(--shadow-lg); padding:4px; min-width:130px;}
+.menu-pop button{display:block; width:100%; text-align:left; border:none; background:none; padding:8px 10px; font-size:13px; font-weight:600; border-radius:6px; color:var(--gris-900); cursor:pointer;}
+.menu-pop button:hover{background:var(--gris-100);}
+.postit-tags{display:flex; flex-wrap:wrap; gap:4px; margin:0 26px 6px 0;}
+.tag{font-size:9.5px; font-weight:800; text-transform:uppercase; padding:2px 6px; border-radius:var(--radius-pill); background:var(--wood-dark); color:#fff;}
+.tag-autor{background:var(--rojo);}
+.tag-dest{background:var(--azul-800);}
+.postit-titulo{font-family:var(--font-display); font-weight:800; font-size:15px; color:var(--gris-900); margin-bottom:4px;}
+.postit-msg{font-size:13px; color:var(--gris-700); margin-bottom:6px; white-space:pre-wrap;}
+.postit-dato{font-size:12px; color:var(--gris-700);}
+.postit-ven{font-size:10.5px; font-weight:700; color:var(--gris-500); margin-top:6px; text-transform:uppercase;}
+.btn-apuntado{margin-top:8px; border:2px solid var(--verde-700); background:#fff; color:var(--verde-700); font-weight:700; font-size:12px; padding:6px 12px; border-radius:var(--radius-sm);}
+.btn-apuntado.on{background:var(--verde-700); color:#fff;}
+.postit-cuenta{font-size:11px; font-weight:700; color:var(--gris-700); margin-left:8px;}
+.check{display:flex; align-items:center; gap:8px; font-weight:600;}
+.field .check input{width:auto; min-height:0; padding:0;}
+.modal{max-height:90vh; overflow-y:auto;}
+.mision-item.completada .mision-txt{text-decoration:line-through; opacity:.6;}
+.toast-wrap{position:fixed; bottom:84px; left:50%; transform:translateX(-50%); z-index:var(--z-toast); display:flex; flex-direction:column; gap:8px; align-items:center;}
+.toast{background:var(--azul-900); color:#fff; padding:10px 16px; border-radius:10px; font-size:13px; font-weight:600; box-shadow:var(--shadow-lg);}
+.toast.error{background:var(--rojo);}
+
+/* CALENDARIO */
+.cal-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;}
+.cal-nav{display:flex; gap:6px;}
+.cal-nav button{border:none; background:var(--gris-100); border-radius:8px; padding:6px 12px; font-weight:700; cursor:pointer;}
+.cal-nav button:hover{background:var(--azul-100);}
+.cal-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:4px;}
+.cal-sem{font-size:11px; font-weight:800; color:var(--gris-500); text-align:center; padding:4px 0;}
+.cal-dia{border:2px solid transparent; background:var(--gris-50); border-radius:10px; min-height:48px; padding:4px 2px; display:flex; flex-direction:column; align-items:center; gap:3px; font-size:13px; font-weight:700; color:var(--gris-900); cursor:pointer;}
+.cal-dia:hover{background:var(--azul-100);}
+.cal-dia.vacio{visibility:hidden; pointer-events:none;}
+.cal-dia.hoy{background:var(--azul-700); color:#fff;}
+.cal-dia.sel{border:2px dashed var(--azul-700);}
+.cal-marcas{display:flex; flex-wrap:wrap; gap:2px; justify-content:center; align-items:center;}
+.mk{width:8px; height:8px; border-radius:50%; display:inline-block;}
+.mk-letra{width:auto; min-width:14px; height:14px; border-radius:7px; font-size:8px; font-weight:800; font-style:normal; color:#fff; background:var(--wood); display:inline-flex; align-items:center; justify-content:center; padding:0 3px;}
+.cal-resumen{border-top:1px dashed var(--gris-300); margin-top:14px; padding-top:12px;}
+.cal-item{display:flex; gap:10px; padding:8px 0; border-bottom:1px solid var(--gris-100); font-size:13px;}
+.cal-item small{display:block; color:var(--gris-500); font-size:11.5px;}
+
+/* CARTA PERSONAL */
+.link-nombre{background:none; border:none; padding:0; color:var(--azul-700); font-weight:700; font-size:inherit; text-decoration:underline dotted; cursor:pointer;}
+.modal.carta-modal{max-width:440px; padding:0; overflow-x:hidden; overflow-y:auto; background:#F3E9D2;}
+.carta-head{position:relative; text-align:center; color:#fff; padding:22px 16px 16px; background:linear-gradient(180deg,#2E7D46,#143D21);}
+.carta-cerrar{position:absolute; top:10px; right:10px; border:none; background:rgba(255,255,255,.2); color:#fff; width:30px; height:30px; border-radius:50%; cursor:pointer;}
+.avatar-anillo{width:124px; height:124px; margin:0 auto 10px; padding:7px; border-radius:50%; background:conic-gradient(#16A34A 0 60deg,#2563EB 60deg 120deg,#DB2777 120deg 180deg,#EA580C 180deg 240deg,#7C3AED 240deg 300deg,#B45309 300deg 360deg);}
+.avatar-foto{width:100%; height:100%; border-radius:50%; overflow:hidden; background:#D9CDB4; border:3px solid #fff;}
+.avatar-foto img,.avatar-foto svg{width:100%; height:100%; object-fit:cover; display:block;}
+.carta-nombre-grande{font-family:var(--font-display); font-weight:800; font-size:22px;}
+.carta-sub{font-size:12.5px; opacity:.9; margin-bottom:8px;}
+.btn-foto{display:inline-block; background:rgba(255,255,255,.18); border:1px solid rgba(255,255,255,.5); color:#fff; padding:5px 12px; border-radius:var(--radius-pill); font-size:12px; font-weight:700; cursor:pointer;}
+.carta-tabs{display:flex; background:#E6D9B8;}
+.carta-tab{flex:1; border:none; background:none; padding:11px 4px; font-weight:700; font-size:13px; color:var(--wood-dark); border-bottom:3px solid transparent; cursor:pointer;}
+.carta-tab.active{border-bottom-color:var(--wood-dark); background:#F3E9D2;}
+.carta-body{padding:16px;}
+.radar-wrap{max-width:300px; margin:0 auto;}
+.radar{width:100%; height:auto; display:block;}
+.equilibrio{background:#fff; border-radius:10px; padding:10px 12px; font-size:13px; margin:8px 0 12px;}
+.dim-fila{display:grid; grid-template-columns:110px 1fr auto; gap:10px; align-items:center; padding:8px 0; border-bottom:1px solid rgba(0,0,0,.08); font-size:13px;}
+.dim-fila small{display:block; color:var(--gris-500); font-size:11px;}
+.dim-barra{height:8px; background:rgba(0,0,0,.12); border-radius:4px; overflow:hidden; margin-bottom:2px;}
+.dim-barra i{display:block; height:100%;}
+.ovr-badge{position:absolute; top:12px; left:14px; text-align:left; line-height:1;}
+.ovr-badge b{display:block; font-family:var(--font-display); font-size:36px; font-weight:800;}
+.ovr-badge small{font-size:11px; font-weight:800; opacity:.85;}
+
+/* CARTA ESTILO FIFA */
+.fifa-grid{display:flex; flex-wrap:wrap; gap:14px; margin-top:12px;}
+.fifa{position:relative; width:132px; height:210px; border-radius:14px 14px 28px 28px; padding:8px; display:flex; flex-direction:column; align-items:center; cursor:pointer; color:#1F2937; box-shadow:0 8px 14px rgba(0,0,0,.35); border:3px solid transparent; background:linear-gradient(160deg,var(--c1,#FDFBFB),var(--c2,#E5E7EB)) padding-box, linear-gradient(160deg,var(--b1,var(--oro-1)),var(--b2,var(--oro-2))) border-box; transition:transform .2s;}
+.fifa:hover{transform:translateY(-5px) scale(1.04);}
+.fifa[data-rama="castores"]{--c1:#FFEDD5; --c2:#FB923C; --b1:#FDBA74; --b2:#C2410C;}
+.fifa[data-rama="lobatos"]{--c1:#FEF9C3; --c2:#FACC15; --b1:#FDE047; --b2:#A16207;}
+.fifa[data-rama="scouts"]{--c1:#E0F2FE; --c2:#38BDF8; --b1:#7DD3FC; --b2:#0369A1;}
+.fifa[data-rama="pioneros"]{--c1:#FEE2E2; --c2:#F87171; --b1:#FCA5A5; --b2:#991B1B;}
+.fifa[data-rama="rutas"]{--c1:#BBF7D0; --c2:#3F9D63; --b1:#4ADE80; --b2:#14532D;}
+.fifa[data-rama="kraal"]{--c1:#E0E7FF; --c2:#818CF8; --b1:#A5B4FC; --b2:#312E81;}
+.fifa-ovr{position:absolute; top:8px; left:10px; line-height:1; text-align:center;}
+.fifa-ovr b{display:block; font-family:var(--font-display); font-size:28px; font-weight:800;}
+.fifa-ovr small{font-size:10px; font-weight:800; opacity:.8;}
+.fifa-foto{width:70px; height:70px; border-radius:50%; overflow:hidden; margin:6px 4px 0 auto; border:2px solid rgba(255,255,255,.8); background:#D9CDB4;}
+.fifa-foto img,.fifa-foto svg{width:100%; height:100%; object-fit:cover; display:block;}
+.fifa-nombre{width:100%; text-align:center; font-size:11px; font-weight:800; text-transform:uppercase; margin:6px 0 2px; padding-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; border-bottom:1px solid rgba(0,0,0,.25);}
+.fifa-radar{width:92px; height:92px;}
+.fifa-radar svg{width:100%; height:100%; display:block;}
+.fifa-wrap{position:relative; display:inline-block;}
+.fifa-rol{text-align:center; font-size:11px; font-weight:800; color:var(--gris-700); margin-top:4px;}
+/* CAMPO DEL KRAAL */
+.kraal-campo{gap:var(--space-5);}
+.kraal-linea{display:flex; flex-direction:column; align-items:center; gap:10px;}
+.kraal-linea+.kraal-linea{border-top:1px dashed rgba(255,255,255,.25); padding-top:20px;}
+.kraal-etiqueta{color:#fff; font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; opacity:.85;}
+.kraal-fila-g{display:flex; flex-wrap:wrap; gap:20px; justify-content:center; align-items:flex-start;}
+.kraal-campo .fifa-rol{color:#fff;}
+/* MODALES */
+.modal-backdrop{position:fixed; inset:0; z-index:var(--z-modal); display:flex; align-items:center; justify-content:center; padding:var(--space-4); background:rgba(15,23,42,.55);}
+.modal{width:100%; max-width:520px; padding:var(--space-5); background:#fff; border-radius:var(--radius-lg);}
+.modal-title{font-family:var(--font-display); font-weight:800; font-size:20px; color:var(--azul-800); margin:0 0 var(--space-4);}
+.modal-actions{display:flex; justify-content:flex-end; gap:var(--space-2); margin-top:var(--space-4);}
+.field{display:flex; flex-direction:column; gap:6px; margin-bottom:var(--space-4);}
+.field label{font-size:12.5px; font-weight:700; color:var(--gris-700);}
+.field input,.field select,.field textarea{width:100%; min-height:42px; padding:10px var(--space-3); border:1.5px solid var(--gris-300); border-radius:10px; font-size:14px;}
+
+/* MISIONES Y TABLAS */
+.misiones-lista{list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:8px;}
+.mision-item{display:flex; align-items:center; gap:12px; padding:10px 14px; background:var(--gris-50); border:1px solid var(--gris-300); border-radius:var(--radius-md);}
+.mision-check{width:20px; height:20px; cursor:pointer;}
+.mision-txt{flex:1; font-size:14px; font-weight:600;}
+.tabla{width:100%; border-collapse:collapse; font-size:13.5px;}
+.tabla th{text-align:left; padding:10px; background:var(--azul-100); color:var(--azul-800); font-size:11px; font-weight:700; border-bottom:2px solid var(--azul-300);}
+.tabla td{padding:10px; border-bottom:1px solid var(--gris-100);}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  :root{--carta-w:75px; --carta-h:110px;}
+  .app-body{display:block;}
+  .sidebar{position:fixed; bottom:0; width:100%; height:var(--bottombar-h); flex-direction:row; padding:0; z-index:var(--z-sidebar);}
+  .sidebar-item{flex:1; flex-direction:column; font-size:11px; padding:6px 0; border-left:none; border-top:3px solid transparent;}
+  .sidebar-item.active{border-top-color:var(--verde-500);}
+  .main-panel{padding:var(--space-4); padding-bottom:calc(var(--bottombar-h) + var(--space-4));}
+  .fila-campo.paralelo{justify-content:center;}
+  .home-grid{grid-template-columns:1fr;}
+  .campo-h{--carta-w:64px; --carta-h:60px;}
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script>
+(function(){
+  var root=document.getElementById('root');
+  try{ iniciar(); } catch(err){ root.innerHTML='<div style="padding:20px;color:red;">Error: '+err.message+'</div>'; console.error(err); }
+
+  function iniciar(){
+    var CURSOS=['2025-2026','2026-2027'];
+    var RAMAS=[
+      {id:'castores',nombre:'Castores',icon:'🦫',edad:'6-8 años',color:'#F97316'},
+      {id:'lobatos',nombre:'Lobatos',icon:'🐺',edad:'8-11 años',color:'#EAB308'},
+      {id:'scouts',nombre:'Rangers',icon:'🧭',edad:'11-14 años',color:'#0EA5E9'},
+      {id:'pioneros',nombre:'Pioneros',icon:'🏕️',edad:'14-17 años',color:'#EF4444'},
+      {id:'rutas',nombre:'Rutas',icon:'🥾',edad:'17-21 años',color:'#166534'}
+    ];
+    var VISTAS=[
+      {id:'corcho',icon:'📌',txt:'Corcho'}, {id:'ramas',icon:'🌿',txt:'Ramas'}, {id:'educandos',icon:'👥',txt:'Educandos'},
+      {id:'kraal',icon:'🧑‍🤝‍🧑',txt:'Kraal'}, {id:'padres',icon:'👨‍👩‍👧',txt:'Padres'}, {id:'viejoslobos',icon:'🐺',txt:'Viejos Lobos'}
+    ];
+    var CARGOS=[
+      {id:'jefatura',nombre:'Jefatura',tipo:'Equipo de grupo',principal:true,icono:'⚜️',miembros:['María','Marina','Ale']},
+      {id:'secretaria',nombre:'Secretaría',tipo:'Gestión',principal:true,icono:'🪶',miembros:['Óscar','Tosqui']},
+      {id:'tesoreria',nombre:'Tesorería',tipo:'Gestión',principal:true,icono:'🪙',miembros:['Claudia','Nikolai']},
+      {id:'ap',nombre:'AP',tipo:'Comisiones',principal:false,icono:'📚',miembros:['Claudia','Nico','Santi']},
+      {id:'af',nombre:'AF',tipo:'Comisiones',principal:false,icono:'🙏',miembros:['María','Mavy','Marina']},
+      {id:'imagen',nombre:'Imagen',tipo:'Comisiones',principal:false,icono:'📸',miembros:['Mavy','Laura']},
+      {id:'intendencia',nombre:'Intendencia',tipo:'Comisiones',principal:false,icono:'🏕️',miembros:['Ale','Carlos','Juan']},
+      {id:'relaciones',nombre:'Relaciones',tipo:'Comisiones',principal:false,icono:'🤝',miembros:['María','Mavy','Marina']}
+    ];
+
+    function uid(){return Math.random().toString(36).slice(2,9);}
+    function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+    
+    var S = JSON.parse(localStorage.getItem('scoutpath-v1')) || {curso:'2026-2027', notas:[], educandos:[], padres:[], viejoslobos:[], misiones:[]};
+    if(S.cargosMiembros){ CARGOS.forEach(function(c){ if(S.cargosMiembros[c.id]) c.miembros=S.cargosMiembros[c.id]; }); }
+    S.notas=S.notas||[]; S.educandos=S.educandos||[]; S.misiones=S.misiones||[];
+    S.ramaResp=S.ramaResp||{};
+    S.ramaCoord=S.ramaCoord||{};
+    function guardarCargos(){
+      S.cargosMiembros={};
+      CARGOS.forEach(function(c){ S.cargosMiembros[c.id]=c.miembros; });
+      guardar();
+    }
+    var vista='corcho';
+    var filtroRama='';
+    var zona='';
+    var TABS=[{id:'todo',txt:'Todo',icon:'📌'},{id:'aviso',txt:'Avisos',icon:'🔔'},{id:'evento',txt:'Eventos',icon:'📅'},{id:'actividad',txt:'Actividades',icon:'🧭'}];
+    var TIPOS={aviso:'Aviso',evento:'Evento',actividad:'Actividad'};
+    var tabCorcho='todo';
+    var publicarComo='jefatura';
+    var menuAbierto='';
+    var MESES=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+    var LETRAS_COM={ap:'AP',af:'AF',imagen:'IM',intendencia:'IN',relaciones:'RE'};
+    var ICONOS_TIPO={aviso:'🔔',evento:'📅',actividad:'🧭'};
+    function iso(y,m,d){ return y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0'); }
+    var hoyD=new Date();
+    var calAnio=hoyD.getFullYear(), calMes=hoyD.getMonth(), calDia=iso(hoyD.getFullYear(),hoyD.getMonth(),hoyD.getDate());
+    var DIMS=[
+      {id:'fisico',nombre:'Físico',icon:'💪',color:'#16A34A'},
+      {id:'intelectual',nombre:'Intelectual',icon:'🧠',color:'#2563EB'},
+      {id:'emocional',nombre:'Emocional',icon:'❤️',color:'#DB2777'},
+      {id:'social',nombre:'Social',icon:'🤝',color:'#EA580C'},
+      {id:'espiritual',nombre:'Espiritual',icon:'🙏',color:'#7C3AED'},
+      {id:'personalidad',nombre:'Personalidad',icon:'🧭',color:'#B45309'}
+    ];
+    var NIVEL_BASE=20, NIVEL_FACTOR=1.1235, NIVEL_MAX=100;
+    var ABREV_RAMA={castores:'CAS',lobatos:'LOB',scouts:'RNG',pioneros:'PIO',rutas:'RUT'};
+    var ABREV_CARGO={jefatura:'JEF',secretaria:'SEC',tesoreria:'TES',ap:'AP',af:'AF',imagen:'IMG',intendencia:'INT',relaciones:'REL'};
+    var perfilKey='', tabPerfil='grafico';
+    var AVATAR_SVG='<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="#D9CDB4"/><circle cx="50" cy="38" r="18" fill="#8B7355"/><path d="M14 100C14 72 32 62 50 62C68 62 86 72 86 100Z" fill="#8B7355"/><path d="M38 63L50 82L62 63Z" fill="#1E40AF"/><path d="M44 63L50 72L56 63Z" fill="#F5C518"/></svg>';
+
+    var modalRoot=document.createElement('div');
+    var toastRoot=document.createElement('div');
+    toastRoot.className='toast-wrap';
+    document.body.appendChild(modalRoot);
+    document.body.appendChild(toastRoot);
+
+    function guardar(){ localStorage.setItem('scoutpath-v1', JSON.stringify(S)); }
+    function toast(msg,error){
+      var t=document.createElement('div'); t.className='toast'+(error?' error':''); t.textContent=msg;
+      toastRoot.appendChild(t); setTimeout(function(){t.remove();},2800);
+    }
+
+    function celdaCarta(c){
+      return '<div class="celda"><div class="carta-scout" data-rama="kraal" data-act="zona" data-id="'+c.id+'"><div class="carta-icono">'+c.icono+'</div><div class="lista-nombres">'+c.miembros.map(function(m){return '<span>'+esc(m)+'</span>';}).join('')+'</div></div><div class="titulo-cargo-fuera">'+c.nombre+'</div></div>';
+    }
+
+    function vCorcho(){
+      var misiones=S.misiones||[];
+      var h='<h1 class="page-title">Grupo Beta</h1><p class="page-subtitle">Panel de organización del grupo scout.</p>';
+      h+='<div class="home-grid">';
+      h+='<div class="home-col-izq">'+vTablon()+'</div>';
+      h+='<div class="home-col-der">';
+      h+='<div class="campo-scout campo-h">';
+
+      // Viejos Lobos (arriba)
+      h+='<div class="celda pos-lobos"><div class="carta-scout" data-rama="viejoslobos" data-act="vista" data-id="viejoslobos"><div class="carta-icono">📷</div><div class="carta-nombre">Veterano</div></div><div class="titulo-cargo-fuera">VIEJOS LOBOS</div></div>';
+
+      // Columna 1: Principales
+      h+='<div class="col-campo" style="grid-column:1;grid-row:2;">'+CARGOS.filter(function(c){return c.principal;}).map(celdaCarta).join('')+'</div>';
+
+      // Columna 2: Comisiones
+      h+='<div class="col-campo" style="grid-column:2;grid-row:2;">'+CARGOS.filter(function(c){return !c.principal;}).map(celdaCarta).join('')+'</div>';
+
+      // Columna 3: Responsables de rama
+      h+='<div class="col-campo" style="grid-column:3;grid-row:2;">'+RAMAS.map(function(r){
+        return '<div class="celda"><div class="carta-scout" data-rama="'+r.id+'" data-act="zona" data-id="coord_'+r.id+'"><div class="carta-icono">📷</div><div class="lista-nombres">'+listaEquipoRama(r.id)+'</div></div><div class="titulo-cargo-fuera">Resp. '+r.nombre+'</div></div>';
+      }).join('')+'</div>';
+
+      // Columna 4: Ramas (los niños)
+      h+='<div class="col-campo" style="grid-column:4;grid-row:2;">'+RAMAS.map(function(r){
+        return '<div class="celda"><div class="carta-scout" data-rama="'+r.id+'" data-act="ver-rama" data-id="'+r.id+'"><div class="carta-icono">'+r.icon+'</div></div><div class="titulo-cargo-fuera">'+r.nombre+'</div></div>';
+      }).join('')+'</div>';
+
+      // Padres (abajo)
+      h+='<div class="celda pos-padres"><div class="carta-scout" data-rama="padres" data-act="vista" data-id="padres"><div class="carta-icono">📷</div><div class="carta-nombre">Representante</div></div><div class="titulo-cargo-fuera">PADRES</div></div>';
+
+      h+='</div>'; // fin campo
+
+      // MISIONES
+      h+='<div class="card"><div class="card-header"><h2 class="card-title">🎯 Misiones activas</h2><button class="btn-primary" data-act="nueva-mision">Nueva misión</button></div>';
+      if(!misiones.length){ h+='<p style="font-size:13px;margin:0;color:var(--gris-500);">No hay misiones pendientes.</p>'; }
+      else {
+        h+='<ul class="misiones-lista">';
+        misiones.forEach(function(m){
+          h+='<li class="mision-item'+(m.completada?' completada':'')+'"><input type="checkbox" class="mision-check" data-act="toggle-mision" data-id="'+esc(m.id)+'"'+(m.completada?' checked':'')+'><span class="mision-txt">'+esc(m.texto)+'</span><button class="btn-danger" data-act="borrar-mision" data-id="'+esc(m.id)+'">✕</button></li>';
+        });
+        h+='</ul>';
+      }
+      h+='</div>';
+
+      h+=vCalendario();
+
+      h+='</div></div>'; // fin col derecha y grid
+      return h;
+    }
+
+    function zonaInfo(id){
+      var c=CARGOS.find(function(x){return x.id===id;});
+      if(c){ return {tipo:'cargo', nombre:c.nombre, icono:c.icono, miembros:c.miembros, rama:null}; }
+      var m=/^coord_(.+)$/.exec(id||'');
+      var r=m && RAMAS.find(function(x){return x.id===m[1];});
+      if(r){ S.ramaResp[r.id]=S.ramaResp[r.id]||[]; return {tipo:'rama', nombre:'Equipo responsable · '+r.nombre, icono:'📷', miembros:S.ramaResp[r.id], rama:r.id}; }
+      return {tipo:'?', nombre:'?', icono:'📷', miembros:[], rama:null};
+    }
+
+    function personasKraal(){
+      var set={};
+      CARGOS.forEach(function(c){ c.miembros.forEach(function(n){ set[n]=1; }); });
+      Object.keys(S.ramaResp).forEach(function(r){ S.ramaResp[r].forEach(function(n){ set[n]=1; }); });
+      return Object.keys(set).sort(function(a,b){ return a.localeCompare(b,'es'); });
+    }
+
+    function listaEquipoRama(rid){
+      var l=S.ramaResp[rid]||[], co=S.ramaCoord[rid];
+      if(!l.length) return '<span>—</span>';
+      return l.slice().sort(function(a,b){ return (b===co)-(a===co); }).map(function(n){
+        return '<span'+(n===co?' class="nombre-negrita"':'')+'>'+esc(n)+'</span>';
+      }).join('');
+    }
+
+    function puedeGestionar(z){
+      if(publicarComo==='jefatura') return true;
+      if(z.tipo==='rama') return publicarComo==='coord_'+z.rama;
+      return false;
+    }
+
+        function cartaConMenu(n,z,zid){
+      zid=zid||zona;
+      var mid='z:'+zid+':'+n;
+      var h='<div class="fifa-wrap">'+cartaFifa('k:'+n);
+      if(puedeGestionar(z)){
+        h+='<div class="postit-menu"><button class="postit-del" data-act="menu-nota" data-id="'+esc(mid)+'" title="Opciones">⋮</button>';
+        if(menuAbierto===mid){ h+='<div class="menu-pop"><button data-act="quitar-persona" data-zona="'+esc(zid)+'" data-id="'+esc(n)+'">🗑️ Quitar de aquí</button></div>'; }
+        h+='</div>';
+      }
+      if(z.tipo==='rama' && S.ramaCoord[z.rama]===n){ h+='<div class="fifa-rol">👑 Coordinador/a</div>'; }
+      return h+'</div>';
+    }
+
+    function vZona(){
+      var z=zonaInfo(zona);
+      var puede=puedeGestionar(z);
+      var h='<div style="display:flex;align-items:center;gap:15px;margin-bottom:12px;"><button class="btn-secondary" data-act="vista" data-id="corcho">← Volver al campo</button><h1 class="page-title" style="margin:0;">'+z.icono+' '+esc(z.nombre)+'</h1></div>';
+      h+='<p style="font-size:12px;color:var(--gris-500);margin:0 0 14px;">Actuando como: <b>'+esc(nombreActor(publicarComo))+'</b>'+(puede?'':' · solo lectura (cambia "Publicar como" en el Corcho)')+'</p>';
+      h+='<div class="card"><div class="card-header"><h2 class="card-title">Miembros</h2>'+(puede?'<button class="btn-primary" data-act="add-persona">+ Añadir persona</button>':'')+'</div>';
+      if(z.miembros.length){
+        h+='<div class="fifa-grid">'+z.miembros.map(function(n){ return cartaConMenu(n,z); }).join('')+'</div>';
+      } else {
+        h+='<p style="font-size:13px;color:var(--gris-500);margin:0;">Sin miembros asignados todavía.</p>';
+      }
+      return h+'</div>';
+    }
+
+    function actores(){
+      var a=CARGOS.map(function(c){return {id:c.id,nombre:c.nombre};});
+      RAMAS.forEach(function(r){a.push({id:'coord_'+r.id,nombre:'Resp. '+r.nombre});});
+      return a;
+    }
+    function nombreActor(id){
+      var x=actores().find(function(a){return a.id===id;});
+      return x?x.nombre:id;
+    }
+    function nombreDestino(d){
+      if(d==='grupo') return 'Todo el grupo';
+      var p=d.split(':');
+      if(p[0]==='rama'){ var r=RAMAS.find(function(x){return x.id===p[1];}); return r?r.nombre:d; }
+      var c=CARGOS.find(function(x){return x.id===p[1];});
+      return c?c.nombre:d;
+    }
+    function colorNota(d){
+      var p=d.split(':');
+      return p[0]==='rama'?p[1]:p[0];
+    }
+    function fechaES(f){
+      var p=String(f).split('-');
+      return p.length===3?p[2]+'/'+p[1]+'/'+p[0]:f;
+    }
+
+    function puedeEditar(n){ return publicarComo==='jefatura' || publicarComo===n.autor; }
+
+    function postit(n){
+      var h='<div class="postit'+(menuAbierto===n.id?' abierta':'')+'" data-c="'+esc(colorNota(n.destino))+'">';
+      if(puedeEditar(n)){
+        h+='<div class="postit-menu"><button class="postit-del" data-act="menu-nota" data-id="'+esc(n.id)+'" title="Opciones">⋮</button>';
+        if(menuAbierto===n.id){ h+='<div class="menu-pop"><button data-act="editar-nota" data-id="'+esc(n.id)+'">✏️ Editar</button><button data-act="borrar-nota" data-id="'+esc(n.id)+'">🗑️ Eliminar</button></div>'; }
+        h+='</div>';
+      }
+      h+='<div class="postit-tags"><span class="tag tag-autor">✍️ '+esc(nombreActor(n.autor))+'</span><span class="tag">'+esc(TIPOS[n.tipo]||n.tipo)+'</span><span class="tag tag-dest">🎯 '+esc(nombreDestino(n.destino))+'</span></div>';
+      h+='<div class="postit-titulo">'+esc(n.titulo)+'</div>';
+      if(n.mensaje) h+='<div class="postit-msg">'+esc(n.mensaje)+'</div>';
+      if(n.lugar) h+='<div class="postit-dato">📍 <b>Lugar:</b> '+esc(n.lugar)+'</div>';
+      if(n.fecha) h+='<div class="postit-dato">📅 <b>Fecha:</b> '+esc(fechaES(n.fecha))+'</div>';
+      if(n.hora) h+='<div class="postit-dato">🕐 <b>Hora:</b> '+esc(n.hora)+'</div>';
+      var ven=['Kraal']; if(n.verPadres) ven.push('Padres'); if(n.verLobos) ven.push('Viejos Lobos');
+      h+='<div class="postit-ven">👁️ Lo ven: '+ven.join(' · ')+'</div>';
+      if(n.tipo==='evento'){
+        var ap=n.apuntados||[]; var yo=ap.indexOf(publicarComo)>-1;
+        h+='<button class="btn-apuntado'+(yo?' on':'')+'" data-act="apuntar" data-id="'+esc(n.id)+'">'+(yo?'✓ Apuntado':'Apuntarme')+'</button><span class="postit-cuenta">'+ap.length+' apuntado'+(ap.length===1?'':'s')+'</span>';
+      }
+      return h+'</div>';
+    }
+
+    function vTablon(){
+      S.notas=S.notas||[];
+      var h='<div class="corcho-box"><h2>📌 El Corcho</h2>';
+      h+='<div class="corcho-actor"><label for="actor">Publicar como</label><select id="actor">'+actores().map(function(a){return '<option value="'+esc(a.id)+'"'+(a.id===publicarComo?' selected':'')+'>'+esc(a.nombre)+'</option>';}).join('')+'</select></div>';
+      h+='<div class="corcho-tabs">'+TABS.map(function(t){return '<button class="corcho-tab'+(t.id===tabCorcho?' active':'')+'" data-act="tab-corcho" data-id="'+t.id+'" title="'+t.txt+'">'+t.icon+'</button>';}).join('')+'</div>';
+      h+='<button class="btn-primary" style="width:100%;margin-bottom:14px;" data-act="nueva-nota">+ Nueva nota</button>';
+      var lista=S.notas.filter(function(n){return tabCorcho==='todo'||n.tipo===tabCorcho;});
+      if(!lista.length){ h+='<p style="font-size:13px;color:var(--wood-dark);">No hay notas todavía.</p>'; }
+      lista.forEach(function(n){ h+=postit(n); });
+      return h+'</div>';
+    }
+
+    function camposNota(n){
+      n=n||{};
+      var dest=n.destino||'grupo';
+      function opD(v,t){ return '<option value="'+v+'"'+(v===dest?' selected':'')+'>'+t+'</option>'; }
+      function opT(v,t){ return '<option value="'+v+'"'+(v===n.tipo?' selected':'')+'>'+t+'</option>'; }
+      var h='';
+      if(n.id){ h+='<input type="hidden" name="editId" value="'+esc(n.id)+'">'; }
+      h+='<div class="field"><label>Tipo de nota</label><select name="tipo">'+opT('aviso','Aviso / Noticia')+opT('evento','Evento fechado')+opT('actividad','Actividad')+'<option value="sondeo" disabled>Sondeo (próximamente)</option></select></div>';
+      h+='<div class="field"><label>Destino (¿de quién trata?)</label><select name="destino">'+opD('grupo','Todo el grupo')+'<optgroup label="Ramas">'+RAMAS.map(function(r){return opD('rama:'+r.id,r.nombre);}).join('')+'</optgroup><optgroup label="Comisiones">'+CARGOS.filter(function(c){return !c.principal;}).map(function(c){return opD('comision:'+c.id,c.nombre);}).join('')+'</optgroup></select></div>';
+      h+='<div class="field"><label>¿Quién la ve?</label><label class="check"><input type="checkbox" checked disabled> 🧑‍🤝‍🧑 Kraal (siempre)</label><label class="check"><input type="checkbox" name="verPadres"'+(n.verPadres?' checked':'')+'> 👨‍👩‍👧 Padres</label><label class="check"><input type="checkbox" name="verLobos"'+(n.verLobos?' checked':'')+'> 🐺 Viejos Lobos</label></div>';
+      h+='<div class="field"><label>Título corto (máx. 40)</label><input name="titulo" maxlength="40" required value="'+esc(n.titulo||'')+'"></div>';
+      h+='<div class="field"><label>Mensaje</label><textarea name="mensaje" rows="3">'+esc(n.mensaje||'')+'</textarea></div>';
+      h+='<div class="field"><label>📍 Lugar (opcional)</label><input name="lugar" value="'+esc(n.lugar||'')+'"></div>';
+      h+='<div style="display:flex;gap:12px;"><div class="field" style="flex:1;"><label>📅 Fecha (opcional)</label><input type="date" name="fecha" value="'+esc(n.fecha||'')+'"></div><div class="field" style="flex:1;"><label>🕐 Hora (opcional)</label><input type="time" name="hora" value="'+esc(n.hora||'')+'"></div></div>';
+      return h;
+    }
+
+    function marcaNota(n){
+      var p=String(n.destino||'grupo').split(':');
+      if(p[0]==='rama'){
+        var r=RAMAS.find(function(x){return x.id===p[1];});
+        return '<i class="mk" style="background:'+(r?r.color:'#999')+'" title="'+esc(n.titulo)+'"></i>';
+      }
+      if(p[0]==='comision'){
+        return '<i class="mk mk-letra" title="'+esc(n.titulo)+'">'+(LETRAS_COM[p[1]]||'?')+'</i>';
+      }
+      return '<i class="mk" style="background:#2563EB" title="'+esc(n.titulo)+'"></i>';
+    }
+
+    function vCalendario(){
+      var offset=(new Date(calAnio,calMes,1).getDay()+6)%7;
+      var diasMes=new Date(calAnio,calMes+1,0).getDate();
+      var hoyISO=iso(hoyD.getFullYear(),hoyD.getMonth(),hoyD.getDate());
+      var porDia={};
+      (S.notas||[]).forEach(function(n){ if(n.fecha){ (porDia[n.fecha]=porDia[n.fecha]||[]).push(n); } });
+
+      var h='<div class="card"><div class="cal-head"><h2 class="card-title">📅 '+MESES[calMes]+' '+calAnio+'</h2><div class="cal-nav"><button data-act="cal-prev" title="Mes anterior">‹</button><button data-act="cal-hoy">Hoy</button><button data-act="cal-next" title="Mes siguiente">›</button></div></div>';
+      h+='<div class="cal-grid">';
+      ['L','M','X','J','V','S','D'].forEach(function(s){ h+='<div class="cal-sem">'+s+'</div>'; });
+      for(var i=0;i<offset;i++){ h+='<div class="cal-dia vacio"></div>'; }
+      for(var d=1;d<=diasMes;d++){
+        var f=iso(calAnio,calMes,d);
+        var ns=porDia[f]||[];
+        h+='<button class="cal-dia'+(f===hoyISO?' hoy':'')+(f===calDia?' sel':'')+'" data-act="cal-dia" data-id="'+f+'"><span>'+d+'</span><span class="cal-marcas">'+ns.slice(0,3).map(marcaNota).join('')+(ns.length>3?'<b style="font-size:9px;">+'+(ns.length-3)+'</b>':'')+'</span></button>';
+      }
+      h+='</div>';
+
+      var delDia=porDia[calDia]||[];
+      var misDia=(S.misiones||[]).filter(function(m){return m.fecha===calDia;});
+      h+='<div class="cal-resumen"><h3 class="card-title" style="font-size:14px;">📌 Resumen del '+esc(fechaES(calDia))+'</h3>';
+      if(!delDia.length && !misDia.length){
+        h+='<p style="font-size:13px;color:var(--gris-500);margin:8px 0 0;">Sin nada este día.</p>';
+      }
+      delDia.forEach(function(n){
+        var det=[]; if(n.hora) det.push(n.hora); if(n.lugar) det.push(n.lugar); det.push(nombreDestino(n.destino));
+        h+='<div class="cal-item"><span>'+(ICONOS_TIPO[n.tipo]||'📌')+'</span><div><b>'+esc(n.titulo)+'</b><small>'+esc(det.join(' · '))+'</small></div></div>';
+      });
+      misDia.forEach(function(m){
+        h+='<div class="cal-item"><span>🎯</span><div><b>'+esc(m.texto)+'</b><small>Misión</small></div></div>';
+      });
+      return h+'</div></div>';
+    }
+
+    function getPerfil(key){
+      S.perfiles=S.perfiles||{};
+      var p=S.perfiles[key];
+      if(!p){ p=S.perfiles[key]={puntos:{}, foto:'', insignias:[], recorrido:[]}; }
+      return p;
+    }
+
+    function datosPerfil(key){
+      if(key.indexOf('e:')===0){
+        var e=S.educandos.find(function(x){return x.id===key.slice(2);});
+        var r=e && RAMAS.find(function(x){return x.id===e.rama;});
+        return {nombre:e?e.nombre:'?', sub:r?(r.icon+' '+r.nombre):'Educando', ramaId:r?r.id:'kraal', abrev:r?ABREV_RAMA[r.id]:'EDU'};
+      }
+      var nom=key.slice(2);
+      var cs=CARGOS.filter(function(c){return c.miembros.indexOf(nom)>-1;});
+      return {nombre:nom, sub:cs.length?cs.map(function(c){return c.nombre;}).join(' · '):'Kraal', ramaId:'kraal', abrev:cs.length?(ABREV_CARGO[cs[0].id]||'KRL'):'KRL'};
+    }
+
+    function infoNivel(puntos){
+      var nivel=1, coste=NIVEL_BASE, resto=puntos;
+      while(nivel<NIVEL_MAX && resto>=coste){ resto-=coste; coste=coste*NIVEL_FACTOR; nivel++; }
+      if(nivel>=NIVEL_MAX){ return {nivel:NIVEL_MAX, resto:0, coste:coste, pct:100, max:true}; }
+      return {nivel:nivel, resto:resto, coste:coste, pct:Math.round(100*resto/coste), max:false};
+    }
+
+    function statsPerfil(key){
+      var p=getPerfil(key), vals=[], niveles=[];
+      DIMS.forEach(function(d){
+        var n=infoNivel(p.puntos[d.id]||0);
+        niveles.push(n.nivel);
+        vals.push(n.nivel+n.resto/n.coste);
+      });
+      var ovr=Math.round(niveles.reduce(function(a,b){return a+b;},0)/niveles.length);
+      var tope=NIVEL_MAX;
+      return {vals:vals, niveles:niveles, ovr:ovr, tope:tope};
+    }
+
+    function radarSVG(vals,tope,mini){
+      var cx=150, cy=150, R=mini?132:92, anillos=mini?3:5;
+      function pt(i,v){ var a=(-90+i*60)*Math.PI/180; return [cx+R*(v/tope)*Math.cos(a), cy+R*(v/tope)*Math.sin(a)]; }
+      function str(arr){ return arr.map(function(q){return q[0].toFixed(1)+','+q[1].toFixed(1);}).join(' '); }
+      var sw=mini?3:1;
+      var s='<svg viewBox="0 0 300 300" class="radar" xmlns="http://www.w3.org/2000/svg">';
+      for(var k=1;k<=anillos;k++){
+        s+='<polygon points="'+str(DIMS.map(function(d,i){return pt(i,tope*k/anillos);}))+'" fill="'+(k===anillos?'rgba(255,255,255,.45)':'none')+'" stroke="'+(mini?'#6B5B3E':'#B9A67E')+'" stroke-width="'+sw+'"/>';
+      }
+      DIMS.forEach(function(d,i){
+        var q=pt(i,tope);
+        s+='<line x1="'+cx+'" y1="'+cy+'" x2="'+q[0].toFixed(1)+'" y2="'+q[1].toFixed(1)+'" stroke="'+(mini?'#6B5B3E':'#B9A67E')+'" stroke-width="'+sw+'"/>';
+      });
+      s+='<polygon points="'+str(vals.map(function(v,i){return pt(i,v);}))+'" fill="rgba(30,64,175,.45)" stroke="#1E3A8A" stroke-width="'+(mini?5:2.5)+'" stroke-linejoin="round"/>';
+      if(!mini){
+        DIMS.forEach(function(d,i){
+          var a=(-90+i*60)*Math.PI/180;
+          var x=cx+(R+22)*Math.cos(a), y=cy+(R+22)*Math.sin(a)+4;
+          s+='<text x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" text-anchor="middle" font-size="11" font-weight="800" fill="'+d.color+'">'+d.nombre.toUpperCase()+'</text>';
+        });
+      }
+      return s+'</svg>';
+    }
+
+    function equilibrioTxt(vals){
+      var max=Math.max.apply(null,vals), min=Math.min.apply(null,vals);
+      if(max<=1) return '<b>EQUILIBRIO:</b> sin puntos todavía.';
+      if(max-min<0.5) return '<b>EQUILIBRIO:</b> equilibrado.';
+      return '<b>EQUILIBRIO:</b> en desarrollo. Foco en '+DIMS[vals.indexOf(min)].nombre+'.';
+    }
+
+    function cartaFifa(key){
+      var info=datosPerfil(key), p=getPerfil(key), st=statsPerfil(key);
+      return '<div class="fifa" data-rama="'+esc(info.ramaId)+'" data-act="perfil" data-id="'+esc(key)+'">'+
+        '<div class="fifa-ovr"><b>'+st.ovr+'</b><small>'+esc(info.abrev)+'</small></div>'+
+        '<div class="fifa-foto">'+(p.foto?'<img src="'+p.foto+'" alt="">':AVATAR_SVG)+'</div>'+
+        '<div class="fifa-nombre">'+esc(info.nombre)+'</div>'+
+        '<div class="fifa-radar">'+radarSVG(st.vals,st.tope,true)+'</div></div>';
+    }
+
+    function pintarPerfil(){
+      var info=datosPerfil(perfilKey), p=getPerfil(perfilKey), st=statsPerfil(perfilKey);
+      var total=0, filas='';
+      DIMS.forEach(function(d){
+        var pts=p.puntos[d.id]||0; total+=pts;
+        var n=infoNivel(pts);
+        filas+='<div class="dim-fila"><div><b>'+d.icon+' '+d.nombre+'</b><small>Nivel '+n.nivel+(n.max?' · MÁX':'')+'</small></div><div><div class="dim-barra"><i style="width:'+n.pct+'%;background:'+d.color+'"></i></div><small>'+(n.max?'Nivel máximo':Math.floor(n.resto)+' / '+Math.round(n.coste)+' pts')+'</small></div><button class="btn-secondary" data-act="perfil-mas" data-id="'+d.id+'">+25</button></div>';
+      });
+      var h='<div class="modal-backdrop"><div class="modal carta-modal">';
+      h+='<div class="carta-head"><button class="carta-cerrar" data-act="cerrar" title="Cerrar">✕</button>';
+      h+='<div class="ovr-badge"><b>'+st.ovr+'</b><small>'+esc(info.abrev)+'</small></div>';
+      h+='<div class="avatar-anillo"><div class="avatar-foto">'+(p.foto?'<img src="'+p.foto+'" alt="">':AVATAR_SVG)+'</div></div>';
+      h+='<div class="carta-nombre-grande">'+esc(info.nombre)+'</div><div class="carta-sub">'+esc(info.sub)+' · '+total+' pts</div>';
+      h+='<label class="btn-foto" for="fotoInput">📷 Cambiar foto</label><input type="file" id="fotoInput" accept="image/*" style="display:none"></div>';
+      h+='<div class="carta-tabs">';
+      [{id:'camino',txt:'🗺️ Camino'},{id:'insignias',txt:'🏅 Insignias'},{id:'grafico',txt:'📊 Gráfico'}].forEach(function(t){
+        h+='<button class="carta-tab'+(t.id===tabPerfil?' active':'')+'" data-act="perfil-tab" data-id="'+t.id+'">'+t.txt+'</button>';
+      });
+      h+='</div><div class="carta-body">';
+      if(tabPerfil==='grafico'){
+        h+='<div class="radar-wrap">'+radarSVG(st.vals,st.tope,false)+'</div>';
+        h+='<div class="equilibrio">'+equilibrioTxt(st.vals)+'</div>';
+        h+=filas;
+        h+='<p style="font-size:11px;color:var(--gris-500);margin:10px 0 0;">Los botones +25 son de prueba.</p>';
+      } else {
+        h+='<p style="text-align:center;color:var(--gris-500);padding:30px 0;">En construcción (Parte B).</p>';
+      }
+      h+='</div></div></div>';
+      modalRoot.innerHTML=h;
+    }
+
+    function vRamas(){
+      var ramaActual = RAMAS.find(function(r){ return r.id === filtroRama; }) || RAMAS[0];
+      var h = '<div style="display:flex;align-items:center;gap:15px;margin-bottom:20px;">';
+      h += '<button class="btn-secondary" data-act="vista" data-id="corcho">← Volver</button>';
+      h += '<h1 class="page-title" style="margin:0;color:'+ramaActual.color+';">'+ramaActual.nombre+'</h1>';
+      h += '</div>';
+      h += '<div class="campo-scout" style="min-height:600px; overflow-x:auto;">';
+      
+      h += '<div class="fila-campo">';
+      h += '<h3 style="width:100%;text-align:center;color:white;margin-bottom:10px;">Kraal de la Rama</h3>';
+      h += '<div style="display:flex;flex-direction:column;align-items:center;"><div class="carta-scout" data-rama="'+ramaActual.id+'" data-act="editar-carta"><div class="carta-icono">👑</div><div class="carta-nombre">Coordinador</div></div><div class="titulo-cargo-fuera">COORD</div></div>';
+      h += '<div style="display:flex;flex-direction:column;align-items:center;"><div class="carta-scout" data-rama="'+ramaActual.id+'" data-act="editar-carta"><div class="carta-icono">📷</div><div class="carta-nombre">Responsable</div></div><div class="titulo-cargo-fuera">RESP</div></div>';
+      h += '</div>';
+
+      h += '<div class="fila-campo paralelo" style="margin-top:40px; justify-content:center; gap:30px; flex-wrap:wrap;">';
+      var dibujarPatrulla = function(nombre, icono) {
+        var html = '<div style="display:flex;flex-direction:column;align-items:center;background:rgba(0,0,0,0.2);padding:15px;border-radius:12px;border:1px dashed rgba(255,255,255,0.3);">';
+        html += '<h3 style="color:white;margin:0 0 10px 0;font-size:14px;">'+nombre+'</h3>';
+        html += '<div class="carta-scout" data-rama="'+ramaActual.id+'" data-act="editar-carta"><div class="carta-icono">'+icono+'</div><div class="carta-nombre">Guía</div></div>';
+        html += '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:10px;">';
+        for(var i=0;i<6;i++){ html += '<div class="carta-scout" style="width:40px;height:60px;" data-rama="'+ramaActual.id+'" data-act="editar-carta"><div class="carta-icono" style="font-size:16px;">📷</div></div>'; }
+        html += '</div></div>';
+        return html;
+      };
+      h += dibujarPatrulla('Halcones', '🦅');
+      h += dibujarPatrulla('Lobos', '🐺');
+      h += dibujarPatrulla('Zorros', '🦊');
+      h += '</div></div>'; 
+      return h;
+    }
+
+    function vEducandos(){
+      var lista=S.educandos.filter(function(e){return filtroRama===''||e.rama===filtroRama;});
+      var h='<h1 class="page-title">Educandos</h1><p class="page-subtitle">Curso '+esc(S.curso)+'.</p>';
+      h+='<div class="card"><div class="card-header"><h2 class="card-title">Listado ('+lista.length+')</h2><button class="btn-primary" data-act="nuevo-educando">Añadir educando</button></div>';
+      if(!lista.length){ h+='<div class="empty-state"><div class="icon">👥</div><p>No hay educandos.</p></div>'; }
+      else {
+        h+='<table class="tabla"><thead><tr><th>Nombre</th><th>Rama</th><th>Contacto</th><th></th></tr></thead><tbody>';
+        lista.forEach(function(e){
+          h+='<tr><td><button class="link-nombre" data-act="perfil" data-id="e:'+esc(e.id)+'">'+esc(e.nombre)+'</button></td><td>'+esc(e.rama)+'</td><td>'+esc(e.contacto)+'</td><td><button class="btn-danger" data-act="borrar-educando" data-id="'+esc(e.id)+'">Borrar</button></td></tr>';
+        });
+        h+='</tbody></table>';
+        h+='<h3 class="section-title" style="margin-top:20px;">Cartas</h3><div class="fifa-grid">'+lista.map(function(e){return cartaFifa('e:'+e.id);}).join('')+'</div>';
+      }
+      return h+'</div>';
+    }
+
+        function grupoKraal(zid){
+      var z=zonaInfo(zid), puede=puedeGestionar(z);
+      var icono=z.icono, titulo=z.nombre;
+      if(z.tipo==='rama'){
+        var r=RAMAS.find(function(x){return x.id===z.rama;});
+        icono=r.icon; titulo='Resp. '+r.nombre;
+      }
+      var ms=z.miembros.slice();
+      if(z.tipo==='rama'){ var co=S.ramaCoord[z.rama]; ms.sort(function(a,b){ return (b===co)-(a===co); }); }
+      var h='<div class="patrulla-box"><div class="patrulla-head"><span>'+icono+' '+esc(titulo)+'</span>';
+      if(puede){ h+='<button class="btn-mini" data-act="add-persona" data-zona="'+esc(zid)+'" title="Añadir persona">➕</button>'; }
+      h+='</div>';
+      if(ms.length){ h+='<div class="fifa-grid">'+ms.map(function(n){ return cartaConMenu(n,z,zid); }).join('')+'</div>'; }
+      else { h+='<p style="font-size:12px;color:rgba(255,255,255,.7);margin:0;">Sin miembros</p>'; }
+      return h+'</div>';
+    }
+
+    function lineaKraal(etiqueta,ids){
+      return '<div class="kraal-linea"><div class="kraal-etiqueta">'+etiqueta+'</div><div class="kraal-fila-g">'+ids.map(grupoKraal).join('')+'</div></div>';
+    }
+
+    function vKraal(){
+      var h='<h1 class="page-title">Kraal del grupo</h1><p class="page-subtitle">Equipo de responsables.</p>';
+      h+='<p style="font-size:12px;color:var(--gris-500);margin:0 0 14px;">Actuando como: <b>'+esc(nombreActor(publicarComo))+'</b> (cámbialo en el Corcho)</p>';
+      h+='<div class="campo-scout kraal-campo">';
+      h+=lineaKraal('Equipo de grupo',['jefatura']);
+      h+=lineaKraal('Gestión',['secretaria','tesoreria']);
+      h+=lineaKraal('Comisiones',['ap','af','imagen','intendencia','relaciones']);
+      h+=lineaKraal('Equipos de rama',RAMAS.map(function(r){ return 'coord_'+r.id; }));
+      h+='</div>';
+      return h;
+    }
+    function vPadres(){ return '<h1 class="page-title">Padres</h1><p class="page-subtitle">Representantes de familias.</p><div class="card empty-state"><div class="icon">👨‍👩‍👧</div><p>No hay familias registradas.</p></div>'; }
+    function vViejosLobos(){ return '<h1 class="page-title">Viejos Lobos</h1><p class="page-subtitle">Antiguos miembros.</p><div class="card empty-state"><div class="icon">🐺</div><p>No hay viejos lobos registrados.</p></div>'; }
+
+    function render(){
+      var h='<header class="header"><div class="logo"><div class="logo-icon">🍃</div><span>ScoutPath</span><span class="logo-sub">GRUPO BETA</span></div><div class="header-right"><div class="session-select"><label for="curso">Curso</label><select id="curso"><option>2026-2027</option></select></div><div class="avatar">GB</div></div></header><div class="app-body"><nav class="sidebar">';
+      VISTAS.forEach(function(v){
+        h+='<button class="sidebar-item'+(v.id===vista?' active':'')+'" data-act="vista" data-id="'+v.id+'"><span class="icon">'+v.icon+'</span>'+v.txt+'</button>';
+      });
+      h+='</nav><main class="main-panel">';
+      if (vista === 'ramas' && !filtroRama) { vista = 'corcho'; }
+      h+= vista==='zona'?vZona():vista==='corcho'?vCorcho():vista==='ramas'?vRamas():vista==='educandos'?vEducandos():vista==='kraal'?vKraal():vista==='padres'?vPadres():vista==='viejoslobos'?vViejosLobos():vCorcho();
+      h+='</main></div>';
+      root.innerHTML=h;
+    }
+
+    function abrirModal(titulo,campos,tipo){
+      modalRoot.innerHTML='<div class="modal-backdrop"><form class="modal" data-tipo="'+tipo+'"><h2 class="modal-title">'+titulo+'</h2>'+campos+'<div class="modal-actions"><button type="button" class="btn-secondary" data-act="cerrar">Cancelar</button><button type="submit" class="btn-primary">Guardar</button></div></form></div>';
+      modalRoot.querySelector('input')?.focus();
+    }
+    function cerrarModal(){modalRoot.innerHTML='';}
+
+    document.addEventListener('click',function(ev){
+      var el=ev.target.closest('[data-act]');
+      if(!el)return;
+      var act=el.getAttribute('data-act'),id=el.getAttribute('data-id');
+
+      if(act==='cerrar'){ cerrarModal(); return; }
+      if(act==='vista'){ vista=id; if(id==='ramas') filtroRama=''; render(); return; }
+      if(act==='zona'){ zona=id; vista='zona'; render(); return; }
+      if(act==='ver-rama'){ filtroRama=id; vista='ramas'; render(); return; }
+
+      if(act==='cal-prev'){ calMes--; if(calMes<0){ calMes=11; calAnio--; } render(); return; }
+      if(act==='cal-next'){ calMes++; if(calMes>11){ calMes=0; calAnio++; } render(); return; }
+      if(act==='cal-hoy'){ var hoyNow=new Date(); calAnio=hoyNow.getFullYear(); calMes=hoyNow.getMonth(); calDia=iso(calAnio,calMes,hoyNow.getDate()); render(); return; }
+      if(act==='cal-dia'){ calDia=id; render(); return; }
+
+      if(act==='perfil'){ perfilKey=id; tabPerfil='grafico'; pintarPerfil(); return; }
+      if(act==='perfil-tab'){ tabPerfil=id; pintarPerfil(); return; }
+      if(act==='perfil-mas'){ var pf=getPerfil(perfilKey); pf.puntos[id]=(pf.puntos[id]||0)+25; guardar(); pintarPerfil(); return; }
+
+      if(act==='add-persona'){
+        if(el.getAttribute('data-zona')){ zona=el.getAttribute('data-zona'); }
+        var zi=zonaInfo(zona);
+        if(!puedeGestionar(zi)){ return; }
+        var opciones='<option value="">— Elegir de la lista —</option>'+personasKraal().filter(function(n){return zi.miembros.indexOf(n)===-1;}).map(function(n){return '<option value="'+esc(n)+'">'+esc(n)+'</option>';}).join('');
+        var formP='<div class="field"><label>Persona existente</label><select name="existente">'+opciones+'</select></div><div class="field"><label>…o persona nueva (escribe el nombre)</label><input name="nueva" placeholder="Nombre"></div>';
+        if(zi.tipo==='rama'){ formP+='<label class="check"><input type="checkbox" name="coord"> 👑 Coordinador/a de la rama</label>'; }
+        abrirModal('Añadir persona', formP, 'persona');
+        return;
+      }
+      if(act==='quitar-persona'){
+        menuAbierto='';
+        if(!confirm('¿Quitar a '+id+' de aquí?')){ render(); return; }
+        if(el.getAttribute('data-zona')){ zona=el.getAttribute('data-zona'); }
+        var zq=zonaInfo(zona), ix=zq.miembros.indexOf(id);
+        if(!puedeGestionar(zq)){ render(); return; }
+        if(ix>-1){
+          zq.miembros.splice(ix,1);
+          if(zq.tipo==='rama' && S.ramaCoord[zq.rama]===id){ delete S.ramaCoord[zq.rama]; }
+          guardarCargos();
+        }
+        render(); return;
+      }
+
+      if(act==='tab-corcho'){ tabCorcho=id; render(); return; }
+      if(act==='nueva-nota'){ abrirModal('📌 Pinchar nueva nota', camposNota(), 'nota'); return; }
+      if(act==='menu-nota'){ menuAbierto=(menuAbierto===id?'':id); render(); return; }
+      if(act==='editar-nota'){
+        var notaEd=S.notas.find(function(x){return x.id===id;});
+        menuAbierto=''; render();
+        if(notaEd){ abrirModal('✏️ Editar nota', camposNota(notaEd), 'nota'); }
+        return;
+      }
+      if(act==='borrar-nota'){
+        menuAbierto='';
+        if(!confirm('¿Eliminar esta nota?')){ render(); return; }
+        S.notas=S.notas.filter(function(n){return n.id!==id;}); guardar(); render(); return;
+      }
+      if(act==='apuntar'){
+        var nota=S.notas.find(function(x){return x.id===id;});
+        if(nota){
+          nota.apuntados=nota.apuntados||[];
+          var i=nota.apuntados.indexOf(publicarComo);
+          if(i>-1){ nota.apuntados.splice(i,1); } else { nota.apuntados.push(publicarComo); }
+          guardar(); render();
+        }
+        return;
+      }
+
+      if(act==='editar-carta'){ abrirModal('Editar Perfil', '<p style="text-align:center;padding:20px;">Formulario en construcción.</p>', 'editar'); return; }
+
+      if(act==='nueva-mision'){ abrirModal('Nueva misión', '<div class="field"><label>¿Qué hay que hacer?</label><input name="texto" required></div>', 'mision'); return; }
+      if(act==='nuevo-educando'){ abrirModal('Nuevo educando', '<div class="field"><label>Nombre</label><input name="nombre" required></div><div class="field"><label>Contacto</label><input name="contacto"></div>', 'educando'); return; }
+      if(act==='toggle-mision'){
+        var mi=S.misiones.find(function(x){return x.id===id;});
+        if(mi){ mi.completada=!mi.completada; guardar(); render(); }
+        return;
+      }
+
+      if(act==='borrar-educando'){ S.educandos=S.educandos.filter(function(e){return e.id!==id;}); guardar(); render(); return; }
+      if(act==='borrar-mision'){ S.misiones=S.misiones.filter(function(m){return m.id!==id;}); guardar(); render(); return; }
+    });
+
+    document.addEventListener('click',function(ev){
+      if(menuAbierto && !ev.target.closest('.postit-menu')){ menuAbierto=''; render(); }
+    });
+
+    document.addEventListener('change',function(ev){
+      if(ev.target.id==='actor'){ publicarComo=ev.target.value; render(); }
+    });
+
+    document.addEventListener('change',function(ev){
+      if(ev.target.id!=='fotoInput' || !ev.target.files[0]) return;
+      var rd=new FileReader();
+      rd.onload=function(){
+        var img=new Image();
+        img.onload=function(){
+          var lado=256, c=document.createElement('canvas');
+          c.width=lado; c.height=lado;
+          var m=Math.min(img.width,img.height), sx=(img.width-m)/2, sy=(img.height-m)/2;
+          c.getContext('2d').drawImage(img,sx,sy,m,m,0,0,lado,lado);
+          getPerfil(perfilKey).foto=c.toDataURL('image/jpeg',0.8);
+          guardar(); pintarPerfil();
+        };
+        img.src=rd.result;
+      };
+      rd.readAsDataURL(ev.target.files[0]);
+    });
+
+    document.addEventListener('submit',function(ev){
+      var f=ev.target;
+      if(!f.matches('form[data-tipo]'))return;
+      ev.preventDefault();
+      var d=new FormData(f);
+      var tipoForm=f.getAttribute('data-tipo');
+
+      if(tipoForm==='mision'){
+        S.misiones.unshift({id:uid(), texto:d.get('texto'), completada:false});
+        toast('Misión añadida');
+      }
+
+      if(tipoForm==='educando'){
+        S.educandos.push({id:uid(), nombre:d.get('nombre'), rama:filtroRama||'castores', contacto:d.get('contacto')});
+        toast('Educando añadido');
+      }
+
+      if(tipoForm==='nota'){
+        S.notas=S.notas||[];
+        var datos={tipo:d.get('tipo'), titulo:d.get('titulo'), mensaje:d.get('mensaje'), destino:d.get('destino'), lugar:d.get('lugar'), fecha:d.get('fecha'), hora:d.get('hora'), verPadres:d.get('verPadres')==='on', verLobos:d.get('verLobos')==='on'};
+        var editId=d.get('editId');
+        if(editId){
+          var notaMod=S.notas.find(function(x){return x.id===editId;});
+          if(notaMod){ Object.keys(datos).forEach(function(k){ notaMod[k]=datos[k]; }); toast('Nota actualizada'); }
+        } else {
+          datos.id=uid(); datos.autor=publicarComo; datos.apuntados=[]; datos.creada=new Date().toISOString();
+          S.notas.unshift(datos);
+          toast('Nota publicada');
+        }
+      }
+
+      if(tipoForm==='persona'){
+        var nombreP=((d.get('nueva')||'').trim())||d.get('existente')||'';
+        var zi2=zonaInfo(zona);
+        if(!puedeGestionar(zi2)){ return; }
+        if(!nombreP){ toast('Escribe o elige una persona',true); return; }
+        if(zi2.miembros.indexOf(nombreP)===-1){ zi2.miembros.push(nombreP); }
+        if(zi2.tipo==='rama' && d.get('coord')==='on'){ S.ramaCoord[zi2.rama]=nombreP; }
+        guardarCargos();
+        toast('Persona añadida');
+      }
+
+      guardar(); cerrarModal(); render();
+    });
+
+    render();
+  }
+})();
+</script>
+</body>
+</html>
