@@ -4,7 +4,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ScoutPath · Grupo Beta</title>
+<title>ScoutPath · Grupo XXIII>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1E3A8A">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ScoutPath">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -279,17 +285,386 @@ input,select,textarea{font-family:inherit;}
   .home-grid{grid-template-columns:1fr;}
   .campo-h{--carta-w:64px; --carta-h:60px;}
 }
+/* Botones de la cabecera (Notificaciones, Chat) */
+.btn-header-icon {
+  background: var(--gris-100);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--gris-700);
+}
+.btn-header-icon:hover {
+  background: var(--azul-100);
+  color: var(--azul-800);
+  transform: scale(1.05);
+}
+/* ===== ESTILO UNIFICADO: PLACAS DE FORMACIÓN ===== */
+.carta-scout {
+  border-radius: 8px !important;
+  border: 2px solid rgba(0,0,0,0.2) !important;
+  box-shadow: 0 4px 0 rgba(0,0,0,0.2), 0 4px 10px rgba(0,0,0,0.3) !important; /* Sombra 3D tipo ficha */
+  background: #FDFBFB !important; /* Fondo base claro */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding-top: 8px;
+  transition: transform 0.1s, box-shadow 0.1s;
+  cursor: pointer;
+}
+
+/* Efecto al pasar el ratón: parece que se pulsa */
+.carta-scout:hover {
+  transform: translateY(2px) !important;
+  box-shadow: 0 2px 0 rgba(0,0,0,0.2), 0 2px 5px rgba(0,0,0,0.3) !important;
+}
+
+/* Colores sólidos por área */
+.carta-scout[data-rama="kraal"] { background: #E0E7FF !important; border-color: #818CF8 !important; color: #1E1B4B; }
+.carta-scout[data-rama="castores"] { background: #FFEDD5 !important; border-color: #FB923C !important; color: #7C2D12; }
+.carta-scout[data-rama="lobatos"] { background: #FEF9C3 !important; border-color: #FACC15 !important; color: #713F12; }
+.carta-scout[data-rama="scouts"] { background: #E0F2FE !important; border-color: #38BDF8 !important; color: #0C4A6E; }
+.carta-scout[data-rama="pioneros"] { background: #FEE2E2 !important; border-color: #F87171 !important; color: #7F1D1D; }
+.carta-scout[data-rama="rutas"] { background: #BBF7D0 !important; border-color: #4ADE80 !important; color: #14532D; }
+.carta-scout[data-rama="padres"] { background: #F5F5DC !important; border-color: #C9A77C !important; color: #422006; }
+.carta-scout[data-rama="viejoslobos"] { background: #F3F4F6 !important; border-color: #9CA3AF !important; color: #111827; }
+
+/* Iconos y textos más institucionales */
+.carta-icono {
+  font-size: 26px !important;
+  margin-bottom: 2px !important;
+}
+
+.lista-nombres span {
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase;
+}
+
+.titulo-cargo-fuera {
+  background: rgba(0,0,0,0.6);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px !important;
+  margin-top: 5px;
+}
+/* ===== KRAAL: RESUMEN VISUAL ===== */
+.kraal-mapa{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  grid-template-areas:"lobos lobos" "cargos comisiones" "eventos eventos";
+  gap:var(--space-5);
+  padding:var(--space-5);
+}
+.kz-lobos{grid-area:lobos; justify-self:center;}
+.kz-cargos{grid-area:cargos;}
+.kz-comisiones{grid-area:comisiones;}
+.kz-eventos{grid-area:eventos; display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:var(--space-4);}
+
+/* Panel con etiqueta vertical (como "Cargos" / "Comisiones" en tu diseño) */
+.kz-panel{display:grid; grid-template-columns:32px 1fr; gap:var(--space-3);}
+.kz-label{display:flex; align-items:center; justify-content:center; border-right:3px solid rgba(0,0,0,.55);}
+.kz-label span{writing-mode:vertical-rl; transform:rotate(180deg); color:#fff; font-weight:800; font-size:14px; letter-spacing:.14em; text-transform:uppercase;}
+.kz-lista{display:flex; flex-direction:column; align-items:center; gap:var(--space-4);}
+
+/* Carta-resumen */
+.kz-item{display:flex; flex-direction:column; align-items:center; gap:4px; width:100%; max-width:170px; background:none; border:none; padding:0; cursor:pointer;}
+.kz-card{display:flex; flex-direction:column; align-items:center; gap:2px; width:100%; min-height:78px; padding:8px 10px; border:2px solid #818CF8; border-radius:10px; background:#E0E7FF; color:#1E1B4B; box-shadow:0 4px 0 rgba(0,0,0,.25), 0 4px 10px rgba(0,0,0,.3); transition:transform .1s, box-shadow .1s;}
+.kz-gris{background:#F3F4F6; border-color:#9CA3AF; color:#111827;}
+.kz-ico{font-size:24px; line-height:1;}
+.kz-nombres span{display:block; font-size:10px; font-weight:800; text-transform:uppercase; line-height:1.2;}
+.kz-titulo{color:#fff; font-size:11px; font-weight:800; text-transform:uppercase; text-shadow:0 2px 4px rgba(0,0,0,.9);}
+.kz-item:hover .kz-card{transform:translateY(2px); box-shadow:0 2px 0 rgba(0,0,0,.25), 0 2px 5px rgba(0,0,0,.3);}
+.kz-item:focus-visible,.kz-chip:focus-visible{outline:3px solid #fff; outline-offset:3px; border-radius:10px;}
+
+/* Comisiones de evento (Campamento / Verbena) */
+.kz-evento{background:rgba(0,0,0,.25); border:2px solid rgba(255,255,255,.25); border-radius:12px; padding:var(--space-3) var(--space-4);}
+.kz-evento-head{display:flex; align-items:baseline; gap:var(--space-2); color:#fff; font-family:var(--font-display); font-weight:800; font-size:16px; margin-bottom:var(--space-3);}
+.kz-evento-head small{font-size:12px; font-weight:600;}
+.kz-chips{display:flex; flex-direction:column; gap:6px;}
+.kz-chip{display:flex; justify-content:space-between; align-items:center; gap:var(--space-3); width:100%; text-align:left; padding:8px 12px; border:none; border-radius:8px; cursor:pointer; box-shadow:0 3px 0 rgba(0,0,0,.25);}
+.kz-chip strong{display:block; font-size:12px;}
+.kz-chip small{display:block; font-size:11px; font-weight:600;}
+.kz-chip b{background:rgba(0,0,0,.12); border-radius:999px; padding:2px 8px; font-size:11px;}
+.ev-campamento .kz-chip{background:#FBD5D5; color:#7F1D1D;}
+.ev-verbena .kz-chip{background:#FEF3C7; color:#78350F;}
+
+@media(max-width:768px){
+  .kraal-mapa{grid-template-columns:1fr; grid-template-areas:"lobos" "cargos" "comisiones" "eventos";}
+}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 <div id="root"></div>
+<div id="login-screen" style="display:none; position:fixed; inset:0; background:var(--azul-900); z-index:9999; align-items:center; justify-content:center; padding:20px; overflow-y:auto;">
+  <div style="background:white; padding:40px; border-radius:16px; max-width:420px; width:100%; text-align:center; box-shadow:0 10px 25px rgba(0,0,0,0.5); margin: auto;">
+    
+    <div style="width:80px; height:80px; background:var(--azul-800); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 20px; border:4px solid var(--azul-300);">
+      <span style="font-size:36px;">🍃</span>
+    </div>
+        <h1 style="font-family:var(--font-display); color:var(--azul-800); margin:0 0 5px 0; font-size:28px;">SCOUTPATH</h1>
+    <p style="color:var(--verde-700); font-weight:700; font-size:14px; margin:0 0 20px 0;">△ Inicia tu aventura</p>
 
+    <!-- Pestañas -->
+    <div style="display:flex; background:var(--gris-100); border-radius:10px; padding:4px; margin-bottom:20px;">
+      <button id="tab-login" class="btn-tab active" style="flex:1; border:none; padding:10px; border-radius:8px; font-weight:700; cursor:pointer;">Iniciar sesión</button>
+      <button id="tab-register" class="btn-tab" style="flex:1; border:none; padding:10px; border-radius:8px; font-weight:700; cursor:pointer;">Crear cuenta</button>
+    </div>
+
+    <!-- Formulario de Login -->
+    <form id="form-login" style="display:block; text-align:left;">
+      <div class="field"><label>Email</label><input type="email" id="log-email" required placeholder="tucorreo@ejemplo.com"></div>
+      <div class="field"><label>Contraseña</label><input type="password" id="log-pass" required placeholder="••••••••"></div>
+      <button type="submit" class="btn-primary" style="width:100%; padding:12px; font-size:16px; margin-top:10px;">Entrar</button>
+    </form>
+
+    <!-- Formulario de Registro -->
+    <form id="form-register" style="display:none; text-align:left;">
+      <div class="field"><label>Email</label><input type="email" id="reg-email" required placeholder="tucorreo@ejemplo.com"></div>
+      <div class="field"><label>Contraseña</label><input type="password" id="reg-pass" required placeholder="Mínimo 6 caracteres"></div>
+      <div class="field"><label>Nombre Pedagógico</label><input type="text" id="reg-nombre" required placeholder="Ej: Ibero"></div>
+      
+      <div class="field">
+        <label>Tu Grupo</label>
+        <select id="reg-grupo">
+          <option value="xxiii">Grupo XXIII - Beta</option>
+        </select>
+      </div>
+
+      <div style="background:var(--gris-50); border:1px solid var(--gris-300); border-radius:10px; padding:12px; margin-bottom:15px; font-size:12px; color:var(--gris-700);">
+        Te registras como <b>Miembro</b>. Si tu cargo es Coordinador/a o Jefatura, pide a la Jefatura del grupo que te asigne el rol desde el panel.
+      </div>
+
+      <button type="submit" class="btn-primary" style="width:100%; padding:12px; font-size:16px; background:var(--verde-700);">Crear mi cuenta</button>
+    </form>
+
+         <p id="auth-msg" style="margin-top:15px; font-size:13px; font-weight:bold; display:none;"></p>
+    </div>
+  </div>
+
+  <!-- PEGA AQUÍ EL BLOQUE DE VERIFY-SCREEN -->
+  <div id="verify-screen" style="display:none; position:fixed; inset:0; background:var(--azul-900); z-index:10000; align-items:center; justify-content:center; padding:20px;">
+    <div style="background:white; padding:40px; border-radius:16px; max-width:420px; width:100%; text-align:center; box-shadow:0 10px 25px rgba(0,0,0,0.5);">
+      
+      <div style="font-size:48px; margin-bottom:15px;">✉️</div>
+      <h2 style="font-family:var(--font-display); color:var(--azul-800); margin:0 0 10px 0;">Revisa tu correo</h2>
+      <p style="color:var(--gris-500); font-size:14px; margin-bottom:20px;">Hemos enviado un código de 6 dígitos a <b id="verify-email-txt"></b>.</p>
+
+      <form id="form-verify">
+        <div class="field">
+          <input type="text" id="verify-code" placeholder="Escribe el código de 6 dígitos" required maxlength="6" style="text-align:center; font-size:24px; letter-spacing:5px; font-weight:bold;">
+        </div>
+        <button type="submit" class="btn-primary" style="width:100%; padding:12px; font-size:16px;">Verificar cuenta</button>
+      </form>
+
+      <p id="verify-msg" style="margin-top:15px; font-size:13px; font-weight:bold; display:none;"></p>
+    </div>
+  </div>
+ <style>
+  .btn-tab { color: var(--gris-500); transition: all 0.2s; background: transparent; }
+  .btn-tab.active { background: white; color: var(--azul-800); box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+/* MENSAJERÍA */
+.msg-layout{display:grid; grid-template-columns:300px minmax(0,1fr); gap:var(--space-4); height:calc(100vh - var(--header-h) - 150px); min-height:420px;}
+.msg-lista{margin:0; padding:var(--space-3); overflow-y:auto;}
+.msg-buscar{width:100%; padding:10px 12px; border:1.5px solid var(--gris-300); border-radius:var(--radius-sm); font-size:13.5px; margin-bottom:var(--space-3);}
+.msg-buscar:focus,.msg-form input:focus{outline:none; border-color:var(--azul-600);}
+.msg-grupo{font-family:var(--font-display); font-weight:800; font-size:12px; letter-spacing:.06em; color:var(--azul-800); margin:var(--space-4) 0 var(--space-1); padding:0 var(--space-2);}
+.msg-item{display:flex; justify-content:space-between; align-items:center; gap:8px; width:100%; padding:10px 12px; background:none; border:none; border-radius:var(--radius-sm); font-size:13.5px; font-weight:600; color:var(--gris-700); text-align:left;}
+.msg-item:hover{background:var(--gris-100);}
+.msg-item.active{background:var(--azul-100); color:var(--azul-800);}
+.msg-item small{color:var(--gris-500); font-weight:500;}
+.msg-vacio{font-size:12.5px; color:var(--gris-500); padding:6px 12px; margin:0;}
+.msg-chat{margin:0; padding:0; display:flex; flex-direction:column; overflow:hidden;}
+.msg-chat-head{padding:14px 18px; border-bottom:1px solid var(--gris-100); font-family:var(--font-display); font-weight:700; color:var(--azul-800);}
+.msg-hist{flex:1; overflow-y:auto; padding:var(--space-4); display:flex; flex-direction:column; gap:10px; background:var(--gris-50);}
+.msg-burbuja{max-width:75%; align-self:flex-start; background:#fff; border:1px solid var(--gris-300); border-radius:var(--radius-md); padding:8px 12px;}
+.msg-burbuja.mio{align-self:flex-end; background:var(--azul-100); border-color:var(--azul-300);}
+.msg-meta{font-size:11px; color:var(--gris-500); margin-bottom:2px;}
+.msg-meta b{color:var(--azul-800);}
+.msg-texto{font-size:14px; white-space:pre-wrap; word-break:break-word;}
+.msg-form{display:flex; gap:var(--space-2); padding:var(--space-3); border-top:1px solid var(--gris-100);}
+.msg-form input{flex:1; padding:10px 12px; border:1.5px solid var(--gris-300); border-radius:var(--radius-sm); font-size:14px;}
+@media(max-width:768px){
+  .msg-layout{grid-template-columns:1fr; height:auto;}
+  .msg-lista{max-height:260px;}
+  .msg-chat{height:60vh;}
+  .msg-chat{height:60vh;}
+}
+/* Chat: separadores de día, hora y panel dentro de espacios */
+.msg-dia{align-self:center; margin:var(--space-2) 0;}
+.msg-dia span{background:var(--gris-100); color:var(--gris-700); font-size:11px; font-weight:700; padding:3px 10px; border-radius:var(--radius-pill);}
+.msg-hora{font-size:10.5px; color:var(--gris-500); text-align:right; margin-top:2px;}
+.zona-chat-box{display:flex; flex-direction:column; height:420px; border:1px solid var(--gris-300); border-radius:var(--radius-md); overflow:hidden;}
+</style>
 <script>
 (function(){
   var root=document.getElementById('root');
-  try{ iniciar(); } catch(err){ root.innerHTML='<div style="padding:20px;color:red;">Error: '+err.message+'</div>'; console.error(err); }
+//============ CONEXIÓN A SUPABASE================ // 
+ 
+  const SUPABASE_URL = 'https://wrswjledftoqmqzcracd.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_bpKasvU8lDoA1EmA1fdcMg_fQ0Ovm2L';
+    const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+    auth: {
+      storage: window.sessionStorage,
+      autoRefreshToken: true,
+      persistSession: true
+    }
+  });;
+    // ==========================================
+  // LÓGICA DE AUTENTICACIÓN
+  // ==========================================
+  const loginScreen = document.getElementById('login-screen');
+  const formLogin = document.getElementById('form-login');
+  const formRegister = document.getElementById('form-register');
+  const authMsg = document.getElementById('auth-msg');
 
-  function iniciar(){
+  document.getElementById('tab-login').addEventListener('click', () => {
+    document.getElementById('tab-login').classList.add('active');
+    document.getElementById('tab-register').classList.remove('active');
+    formLogin.style.display = 'block';
+    formRegister.style.display = 'none';
+    authMsg.style.display = 'none';
+  });
+
+  document.getElementById('tab-register').addEventListener('click', () => {
+    document.getElementById('tab-register').classList.add('active');
+    document.getElementById('tab-login').classList.remove('active');
+    formLogin.style.display = 'none';
+    formRegister.style.display = 'block';
+    authMsg.style.display = 'none';
+  });
+
+  function mostrarMsg(texto, error) {
+    authMsg.style.display = 'block';
+    authMsg.style.color = error ? 'var(--rojo)' : 'var(--verde-700)';
+    authMsg.textContent = texto;
+  }
+
+      async function checkUser() {
+    const { data: { session } } = await db.auth.getSession();
+    if (session) {
+      loginScreen.style.display = 'none';
+      if (!window.appIniciada) {
+        window.appIniciada = true;
+        iniciarApp(); 
+      }
+    } else {
+      loginScreen.style.display = 'flex';
+    }
+  }
+
+  formLogin.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    mostrarMsg('Entrando...', false);
+    const { error } = await db.auth.signInWithPassword({
+      email: document.getElementById('log-email').value,
+      password: document.getElementById('log-pass').value,
+    });
+    if (error) { mostrarMsg('Error: ' + error.message, true); }
+  });
+
+    // REGISTRARSE
+  formRegister.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    mostrarMsg('Creando cuenta...', false);
+    
+    const email = document.getElementById('reg-email').value;
+    const pass = document.getElementById('reg-pass').value;
+    const nombre = document.getElementById('reg-nombre').value;
+    const grupoSlug = document.getElementById('reg-grupo').value;
+
+    // 1. Crear el usuario en Auth
+    const { data: authData, error: authError } = await db.auth.signUp({ email, password: pass });
+    
+    if (authError) { mostrarMsg('Error: ' + authError.message, true); return; }
+
+    // 2. Si se creó bien, pasamos a la pantalla de verificación
+    if (authData.user) {
+      document.getElementById('verify-email-txt').textContent = email;
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('verify-screen').style.display = 'flex';
+    }
+  });
+
+  // ==========================================
+  // VERIFICACIÓN DEL CÓDIGO OTP
+  // ==========================================
+  const formVerify = document.getElementById('form-verify');
+  const verifyMsg = document.getElementById('verify-msg');
+
+  formVerify.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    verifyMsg.style.display = 'block';
+    verifyMsg.style.color = 'var(--azul-800)';
+    verifyMsg.textContent = 'Verificando...';
+
+    const code = document.getElementById('verify-code').value;
+    const email = document.getElementById('verify-email-txt').textContent;
+
+    // Verificamos el código con Supabase
+    const { data, error } = await db.auth.verifyOtp({
+      email: email,
+      token: code,
+      type: 'signup'
+    });
+
+    if (error) {
+      verifyMsg.style.color = 'var(--rojo)';
+      verifyMsg.textContent = 'Código incorrecto: ' + error.message;
+    } else {
+      verifyMsg.style.color = 'var(--verde-700)';
+      verifyMsg.textContent = '¡Verificado! Preparando tu perfil...';
+      
+      // Si el código es correcto, insertamos su perfil en la base de datos
+      const nombre = document.getElementById('reg-nombre').value;
+      const grupoSlug = document.getElementById('reg-grupo').value;
+      
+      const { data: grupoData } = await db.from('grupos').select('id').eq('slug', grupoSlug).single();
+      
+      await db.from('usuarios_perfiles').insert({
+        id: data.user.id,
+        nombre_pedagogico: nombre,
+        grupo_id: grupoData ? grupoData.id : null,
+        rol: 'miembro'
+      });
+
+      // Entramos a la app automáticamente
+            document.getElementById('verify-screen').style.display = 'none';
+      if (!window.appIniciada) {
+        window.appIniciada = true;
+        iniciarApp(); 
+      }
+    }
+  });
+
+         db.auth.onAuthStateChange((event, session) => {
+    if (event === 'SIGNED_IN') {
+      loginScreen.style.display = 'none';
+      if (!window.appIniciada) {
+        window.appIniciada = true;
+        iniciarApp();
+      }
+    } else if (event === 'SIGNED_OUT') {
+      loginScreen.style.display = 'flex';
+      window.appIniciada = false;
+      document.getElementById('root').innerHTML = '';
+    }
+   });
+
+  // Arrancamos comprobando si hay sesión
+  checkUser().catch(err => {
+    document.getElementById('root').innerHTML = '<div style="padding:20px;color:red;">Error: ' + err.message + '</div>';
+  });
+
+  function iniciarApp(){
     var CURSOS=['2025-2026','2026-2027'];
     var RAMAS=[
       {id:'castores',nombre:'Castores',icon:'🦫',edad:'6-8 años',color:'#F97316'},
@@ -297,11 +672,12 @@ input,select,textarea{font-family:inherit;}
       {id:'scouts',nombre:'Rangers',icon:'🧭',edad:'11-14 años',color:'#0EA5E9'},
       {id:'pioneros',nombre:'Pioneros',icon:'🏕️',edad:'14-17 años',color:'#EF4444'},
       {id:'rutas',nombre:'Rutas',icon:'🥾',edad:'17-21 años',color:'#166534'}
+
     ];
     var VISTAS=[
-      {id:'corcho',icon:'📌',txt:'Corcho'}, {id:'ramas',icon:'🌿',txt:'Ramas'}, {id:'educandos',icon:'👥',txt:'Educandos'},
-      {id:'kraal',icon:'🧑‍🤝‍🧑',txt:'Kraal'}, {id:'padres',icon:'👨‍👩‍👧',txt:'Padres'}, {id:'viejoslobos',icon:'🐺',txt:'Viejos Lobos'}
-    ];
+      {id:'corcho',icon:'🏠',txt:'Grupo XXIII'},{id:'kraal',icon:'🧑‍🤝‍🧑',txt:'Kraal'}, {id:'ramas',icon:'🌿',txt:'Ramas'}, {id:'educandos',icon:'👥',txt:'Educandos'},{id:'viejoslobos',icon:'🐺',txt:'Viejos Lobos'}
+      , {id:'padres',icon:'👨‍👩‍👧',txt:'Padres'}, 
+          ];
     var CARGOS=[
       {id:'jefatura',nombre:'Jefatura',tipo:'Equipo de grupo',principal:true,icono:'⚜️',miembros:['María','Marina','Ale']},
       {id:'secretaria',nombre:'Secretaría',tipo:'Gestión',principal:true,icono:'🪶',miembros:['Óscar','Tosqui']},
@@ -312,7 +688,27 @@ input,select,textarea{font-family:inherit;}
       {id:'intendencia',nombre:'Intendencia',tipo:'Comisiones',principal:false,icono:'🏕️',miembros:['Ale','Carlos','Juan']},
       {id:'relaciones',nombre:'Relaciones',tipo:'Comisiones',principal:false,icono:'🤝',miembros:['María','Mavy','Marina']}
     ];
-
+       var EVENTOS=[
+  {id:'campamento', nombre:'Campamento', sub:'Navidad', icono:'⛺'},
+  {id:'verbena', nombre:'Verbena', sub:'', icono:'🎪'}
+];
+var COMISIONES=[
+  {id:'gcd', evento:'campamento', nombre:'Gestión de campamento', miembros:['Nikolai','Manu','María','Cris']},
+  {id:'cocina', evento:'campamento', nombre:'Cocina', miembros:['Mavi','Carlos','Clau','Ale']},
+  {id:'transporte', evento:'campamento', nombre:'Transporte', miembros:['Juan','Laura']},
+  {id:'intendencia_camp', evento:'campamento', nombre:'Intendencia', miembros:['Tosqui','Nico','Miguel']},
+  {id:'subidas', evento:'campamento', nombre:'Subidas', miembros:['Mavi','Marina','Santi']},
+  {id:'fuego', evento:'campamento', nombre:'Fuego', miembros:['Juan','María','Nikolai','Miguel']},
+  {id:'ac', evento:'campamento', nombre:'Animación de campa', miembros:['Ale','Cris']},
+  {id:'celebracion', evento:'campamento', nombre:'Celebración', miembros:['Rangers']},
+  {id:'sitio', evento:'verbena', nombre:'Sitio y permisos', miembros:[]},
+  {id:'patrocinadores', evento:'verbena', nombre:'Patrocinadores', miembros:[]},
+  {id:'merchandising', evento:'verbena', nombre:'Merchandising', miembros:[]},
+  {id:'entretenimiento', evento:'verbena', nombre:'Entretenimiento', miembros:[]},
+  {id:'presupuesto', evento:'verbena', nombre:'Presupuesto y previsión', miembros:[]},
+  {id:'menu', evento:'verbena', nombre:'Menú', miembros:[]},
+  {id:'intendencia_verb', evento:'verbena', nombre:'Intendencia', miembros:[]}
+];
     function uid(){return Math.random().toString(36).slice(2,9);}
     function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
     
@@ -329,6 +725,7 @@ input,select,textarea{font-family:inherit;}
     var vista='corcho';
     var filtroRama='';
     var zona='';
+var zonaOrigen='corcho';
     var TABS=[{id:'todo',txt:'Todo',icon:'📌'},{id:'aviso',txt:'Avisos',icon:'🔔'},{id:'evento',txt:'Eventos',icon:'📅'},{id:'actividad',txt:'Actividades',icon:'🧭'}];
     var TIPOS={aviso:'Aviso',evento:'Evento',actividad:'Actividad'};
     var tabCorcho='todo';
@@ -360,14 +757,161 @@ input,select,textarea{font-family:inherit;}
     document.body.appendChild(modalRoot);
     document.body.appendChild(toastRoot);
 
-    function guardar(){ localStorage.setItem('scoutpath-v1', JSON.stringify(S)); }
+    // ==========================================
+    // SINCRONIZACIÓN CON SUPABASE
+    // ==========================================
+    function notaAFila(n){
+      return {
+        id:n.id, tipo:n.tipo, titulo:n.titulo, mensaje:n.mensaje||'', destino:n.destino,
+        lugar:n.lugar||'', fecha:n.fecha||null, hora:n.hora||null,
+        autor:n.autor, apuntados:n.apuntados||[], creada:n.creada||null,
+        ver_padres:!!n.verPadres, ver_lobos:!!n.verLobos
+      };
+    }
+    function filaANota(r){
+      return {
+        id:r.id, tipo:r.tipo, titulo:r.titulo, mensaje:r.mensaje||'', destino:r.destino,
+        lugar:r.lugar||'', fecha:r.fecha||'', hora:r.hora?String(r.hora).slice(0,5):'',
+        autor:r.autor, apuntados:r.apuntados||[], creada:r.creada||'',
+        verPadres:!!r.ver_padres, verLobos:!!r.ver_lobos
+      };
+    }
+    function misionAFila(m){
+      var f={id:m.id, texto:m.texto, completada:!!m.completada};
+      if(m.fecha) f.fecha=m.fecha;
+      return f;
+    }
+    function filaAMision(r){
+      var m={id:r.id, texto:r.texto, completada:!!r.completada};
+      if(r.fecha) m.fecha=r.fecha;
+      return m;
+    }
+    function educandoAFila(e){ return {id:e.id, nombre:e.nombre, rama:e.rama, contacto:e.contacto||''}; }
+    function filaAEducando(r){ return {id:r.id, nombre:r.nombre, rama:r.rama, contacto:r.contacto||''}; }
+    function perfilesAFilas(){
+      var ps=S.perfiles||{};
+      return Object.keys(ps).map(function(k){
+        var p=ps[k]||{};
+        return {key:k, puntos:p.puntos||{}, foto:p.foto||'', insignias:p.insignias||[], recorrido:p.recorrido||[]};
+      });
+    }
+
+    async function guardar(){
+      // 1) Caché local (siempre, como seguro)
+      try{ localStorage.setItem('scoutpath-v1', JSON.stringify(S)); }catch(e){ console.error('localStorage:',e); }
+      // 2) Nube
+      try{
+        var r;
+        if((S.notas||[]).length){
+          r=await db.from('notas').upsert(S.notas.map(notaAFila));
+          if(r.error) throw r.error;
+        }
+        if((S.misiones||[]).length){
+          r=await db.from('misiones').upsert(S.misiones.map(misionAFila));
+          if(r.error) throw r.error;
+        }
+        if((S.educandos||[]).length){
+          r=await db.from('educandos').upsert(S.educandos.map(educandoAFila));
+          if(r.error) throw r.error;
+        }
+        var filasPerfiles=perfilesAFilas();
+        if(filasPerfiles.length){
+          r=await db.from('perfiles').upsert(filasPerfiles,{onConflict:'key'});
+          if(r.error) throw r.error;
+        }
+      }catch(err){
+        console.error('Error al guardar en la nube:',err);
+        toast("Error al guardar en la nube", true);
+      }
+    }
+
+    // Borrado explícito en la nube (el upsert nunca elimina filas)
+    async function borrarEnNube(tabla,id){
+      try{
+        var r=await db.from(tabla).delete().eq('id',id);
+        if(r.error) throw r.error;
+      }catch(err){
+        console.error('Error al borrar en la nube:',err);
+        toast("Error al borrar en la nube", true);
+      }
+    }
+
+    async function cargarDatosNube(){
+      try{
+        var rN=await db.from('notas').select('*');
+        var rM=await db.from('misiones').select('*');
+        var rE=await db.from('educandos').select('*');
+        var rP=await db.from('perfiles').select('*');
+        if(rN.error) throw rN.error;
+        if(rM.error) throw rM.error;
+        if(rE.error) throw rE.error;
+        if(rP.error) throw rP.error;
+
+        var subirLocal=false; // si la nube está vacía pero hay datos locales, se suben
+        if(rN.data.length){
+          S.notas=rN.data.map(filaANota).sort(function(a,b){ return String(b.creada).localeCompare(String(a.creada)); });
+        } else if(S.notas.length){ subirLocal=true; }
+        if(rM.data.length){ S.misiones=rM.data.map(filaAMision); }
+        else if(S.misiones.length){ subirLocal=true; }
+        if(rE.data.length){ S.educandos=rE.data.map(filaAEducando); }
+        else if(S.educandos.length){ subirLocal=true; }
+        if(rP.data.length){
+          var perf={};
+          rP.data.forEach(function(row){
+            perf[row.key]={puntos:row.puntos||{}, foto:row.foto||'', insignias:row.insignias||[], recorrido:row.recorrido||[]};
+          });
+          S.perfiles=perf;
+        } else if(S.perfiles && Object.keys(S.perfiles).length){ subirLocal=true; }
+
+        try{ localStorage.setItem('scoutpath-v1', JSON.stringify(S)); }catch(e){ console.error('localStorage:',e); }
+        if(subirLocal){ guardar(); }
+      }catch(err){
+        console.error('Error al cargar desde la nube:',err);
+        toast("Error al cargar de la nube. Se usan los datos locales", true);
+      }
+    }
     function toast(msg,error){
       var t=document.createElement('div'); t.className='toast'+(error?' error':''); t.textContent=msg;
       toastRoot.appendChild(t); setTimeout(function(){t.remove();},2800);
     }
 
-    function celdaCarta(c){
-      return '<div class="celda"><div class="carta-scout" data-rama="kraal" data-act="zona" data-id="'+c.id+'"><div class="carta-icono">'+c.icono+'</div><div class="lista-nombres">'+c.miembros.map(function(m){return '<span>'+esc(m)+'</span>';}).join('')+'</div></div><div class="titulo-cargo-fuera">'+c.nombre+'</div></div>';
+        // PLANTILLA DE CARTA PERSONAL
+    function plantillaCarta(nombre, esCoordinador, fotoUrl) {
+      // Si no hay foto, usamos un avatar SVG por defecto
+      var avatarHTML = fotoUrl 
+        ? '<img src="'+fotoUrl+'" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">' 
+        : '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="#D9CDB4"/><circle cx="50" cy="38" r="18" fill="#8B7355"/><path d="M14 100C14 72 32 62 50 62C68 62 86 72 86 100Z" fill="#8B7355"/></svg>';
+
+      return '<div style="display:flex; align-items:center; gap:10px; background:#fff; padding:8px; border-radius:8px; border:1px solid #ddd; margin-bottom:8px; position:relative;">' +
+        // Avatar
+        '<div style="width:40px; height:40px; border-radius:50%; overflow:hidden; background:#eee; flex-shrink:0;">' +
+          avatarHTML +
+        '</div>' +
+        // Nombre
+        '<div style="flex:1; font-size:13px; '+(esCoordinador?'font-weight:900; color:#000;':'color:#555;')+'">' +
+          nombre + (esCoordinador?' (Coord.)':'') +
+        '</div>' +
+        // Botones de acción
+        '<div style="display:flex; gap:5px;">' +
+          '<button style="background:none; border:none; cursor:pointer; font-size:16px;" title="Enviar mensaje" data-act="msg-persona" data-nombre="'+nombre+'">✉️</button>' +
+          '<button style="background:none; border:none; cursor:pointer; font-size:16px;" title="Editar" data-act="editar-persona" data-nombre="'+nombre+'">⋮</button>' +
+        '</div>' +
+      '</div>';
+    }
+
+    // Carta de grupo (Cargos y Comisiones)
+    function cartaKraal(c){
+      // Generamos la lista de miembros usando la plantilla
+      var listaMiembros = '';
+      c.miembros.forEach(function(m, index) {
+        // El primero de la lista es el coordinador (o si estamos en un cargo principal)
+        listaMiembros += plantillaCarta(m, index === 0 || c.principal, null);
+      });
+
+      return '<div class="carta-scout" data-rama="kraal" style="width:140px; height:auto; min-height:120px; padding:5px; justify-content:flex-start; overflow-y:auto;" data-act="zona" data-id="'+c.id+'">' +
+        '<div style="font-weight:800; font-size:12px; text-transform:uppercase; margin-bottom:5px; color:#1E1B4B;">'+c.icono+' '+c.nombre+'</div>' +
+        '<div style="width:100%;">' + listaMiembros + '</div>' +
+      '</div>';
     }
 
     function vCorcho(){
@@ -382,10 +926,10 @@ input,select,textarea{font-family:inherit;}
       h+='<div class="celda pos-lobos"><div class="carta-scout" data-rama="viejoslobos" data-act="vista" data-id="viejoslobos"><div class="carta-icono">📷</div><div class="carta-nombre">Veterano</div></div><div class="titulo-cargo-fuera">VIEJOS LOBOS</div></div>';
 
       // Columna 1: Principales
-      h+='<div class="col-campo" style="grid-column:1;grid-row:2;">'+CARGOS.filter(function(c){return c.principal;}).map(celdaCarta).join('')+'</div>';
+      h+='<div class="col-campo" style="grid-column:1;grid-row:2;">'+CARGOS.filter(function(c){return c.principal;}).map(cartaKraal).join('')+'</div>';
 
       // Columna 2: Comisiones
-      h+='<div class="col-campo" style="grid-column:2;grid-row:2;">'+CARGOS.filter(function(c){return !c.principal;}).map(celdaCarta).join('')+'</div>';
+      h+='<div class="col-campo" style="grid-column:2;grid-row:2;">'+CARGOS.filter(function(c){return !c.principal;}).map(cartaKraal).join('')+'</div>';
 
       // Columna 3: Responsables de rama
       h+='<div class="col-campo" style="grid-column:3;grid-row:2;">'+RAMAS.map(function(r){
@@ -421,6 +965,12 @@ input,select,textarea{font-family:inherit;}
     }
 
     function zonaInfo(id){
+      // AÑADE ESTO PARA LAS COMISIONES
+      var com = COMISIONES.find(function(x){return x.id===id;});
+      if(com){ return {tipo:'comision', nombre:com.nombre, icono:'🛠️', miembros:com.miembros, rama:null}; }
+
+      // ... (el resto de la función que ya tenías)
+      var c=CARGOS.find(function(x){return x.id===id;});
       var c=CARGOS.find(function(x){return x.id===id;});
       if(c){ return {tipo:'cargo', nombre:c.nombre, icono:c.icono, miembros:c.miembros, rama:null}; }
       var m=/^coord_(.+)$/.exec(id||'');
@@ -466,7 +1016,7 @@ input,select,textarea{font-family:inherit;}
     function vZona(){
       var z=zonaInfo(zona);
       var puede=puedeGestionar(z);
-      var h='<div style="display:flex;align-items:center;gap:15px;margin-bottom:12px;"><button class="btn-secondary" data-act="vista" data-id="corcho">← Volver al campo</button><h1 class="page-title" style="margin:0;">'+z.icono+' '+esc(z.nombre)+'</h1></div>';
+      var h='<div style="display:flex;align-items:center;gap:15px;margin-bottom:12px;"><button class="btn-secondary" data-act="vista" data-id="'+zonaOrigen+'">← Volver</button><h1 class="page-title" style="margin:0;">'+z.icono+' '+esc(z.nombre)+'</h1></div>';
       h+='<p style="font-size:12px;color:var(--gris-500);margin:0 0 14px;">Actuando como: <b>'+esc(nombreActor(publicarComo))+'</b>'+(puede?'':' · solo lectura (cambia "Publicar como" en el Corcho)')+'</p>';
       h+='<div class="card"><div class="card-header"><h2 class="card-title">Miembros</h2>'+(puede?'<button class="btn-primary" data-act="add-persona">+ Añadir persona</button>':'')+'</div>';
       if(z.miembros.length){
@@ -474,7 +1024,7 @@ input,select,textarea{font-family:inherit;}
       } else {
         h+='<p style="font-size:13px;color:var(--gris-500);margin:0;">Sin miembros asignados todavía.</p>';
       }
-      return h+'</div>';
+      return h+'</div>'+htmlChatZona(zona);
     }
 
     function actores(){
@@ -755,7 +1305,9 @@ input,select,textarea{font-family:inherit;}
       }
       return h+'</div>';
     }
-
+function lineaKraal(etiqueta,ids){
+      return '<div class="kraal-linea"><div class="kraal-etiqueta">'+etiqueta+'</div><div class="kraal-fila-g">'+ids.map(grupoKraal).join('')+'</div></div>';
+    }
         function grupoKraal(zid){
       var z=zonaInfo(zid), puede=puedeGestionar(z);
       var icono=z.icono, titulo=z.nombre;
@@ -773,36 +1325,457 @@ input,select,textarea{font-family:inherit;}
       return h+'</div>';
     }
 
-    function lineaKraal(etiqueta,ids){
-      return '<div class="kraal-linea"><div class="kraal-etiqueta">'+etiqueta+'</div><div class="kraal-fila-g">'+ids.map(grupoKraal).join('')+'</div></div>';
+       function itemKraal(zid,icono,titulo,ms){
+  var nombres=ms.length
+    ? ms.slice(0,3).map(function(n){return '<span>'+esc(n)+'</span>';}).join('')+(ms.length>3?'<span>+'+(ms.length-3)+' más</span>':'')
+    : '<span>Sin asignar</span>';
+  return '<button class="kz-item" data-act="zona" data-id="'+esc(zid)+'" aria-label="Ver cartas de '+esc(titulo)+'">'
+    +'<span class="kz-card"><span class="kz-ico" aria-hidden="true">'+icono+'</span><span class="kz-nombres">'+nombres+'</span></span>'
+    +'<span class="kz-titulo">'+esc(titulo)+'</span></button>';
+}
+function panelKraal(clase,etiqueta,items){
+  return '<section class="kz-panel '+clase+'"><div class="kz-label"><span>'+etiqueta+'</span></div><div class="kz-lista">'+items+'</div></section>';
+}
+function resumenCorto(ms){
+  if(!ms.length) return 'Sin asignar';
+  return ms.slice(0,2).join(', ')+(ms.length>2?' +'+(ms.length-2):'');
+}
+
+function vKraal(){
+  var h='<h1 class="page-title">Kraal</h1><p class="page-subtitle">Pulsa en un bloque para ver las cartas personales de sus miembros.</p>';
+  h+='<div class="campo-scout kraal-mapa">';
+
+  // Arriba: Viejos Lobos
+  h+='<div class="kz-lobos"><button class="kz-item" data-act="vista" data-id="viejoslobos"><span class="kz-card kz-gris"><span class="kz-ico" aria-hidden="true">📷</span><span class="kz-nombres"><span>Veterano</span></span></span><span class="kz-titulo">Viejos Lobos</span></button></div>';
+
+  // Izquierda: Cargos
+  h+=panelKraal('kz-cargos','Cargos',
+    CARGOS.filter(function(c){return c.principal;}).map(function(c){return itemKraal(c.id,c.icono,c.nombre,c.miembros);}).join(''));
+
+  // Derecha: Comisiones fijas (AP, AF, Imagen...)
+  h+=panelKraal('kz-comisiones','Comisiones',
+    CARGOS.filter(function(c){return !c.principal;}).map(function(c){return itemKraal(c.id,c.icono,c.nombre,c.miembros);}).join(''));
+
+  // Abajo: comisiones de evento
+  h+='<div class="kz-eventos">'+EVENTOS.map(function(ev){
+    var chips=COMISIONES.filter(function(c){return c.evento===ev.id;}).map(function(c){
+      return '<button class="kz-chip" data-act="zona" data-id="'+esc(c.id)+'"><span><strong>'+esc(c.nombre)+'</strong><small>'+esc(resumenCorto(c.miembros))+'</small></span><b>'+c.miembros.length+'</b></button>';
+    }).join('');
+    return '<div class="kz-evento ev-'+ev.id+'"><div class="kz-evento-head"><span>'+ev.icono+' '+esc(ev.nombre)+'</span>'+(ev.sub?'<small>'+esc(ev.sub)+'</small>':'')+'</div><div class="kz-chips">'+chips+'</div></div>';
+  }).join('')+'</div>';
+
+  return h+'</div>';
+}
+    function vPadres(){ return '<h1 class="page-title">Padres</h1><p class="page-subtitle">Representantes de familias.</p><div class="card empty-state"><div class="icon">👨‍👩‍👧</div><p>No hay familias registradas.</p></div>'; }
+    // ==========================================
+    // MENSAJERÍA
+    // ==========================================
+    var MSG={cargado:false, cargando:false, enviando:false, yo:null, chats:[], otros:{}, nombres:{}, chatId:'', mensajes:[], resultados:[], busqueda:'', zonaChats:{}, zonaEstado:null, canal:null};
+    var ETQ_SUBTIPO={monitores:'Monitores', educandos:'Educandos', padres:'Padres'};
+    var tBusca=null;
+
+    function subtiposPermitidos(p){
+      var rol=p.rol||'';
+      if(['monitor','miembro','coordinador','jefatura'].indexOf(rol)>-1){ return ['monitores','educandos','padres']; }
+      if(rol==='educando'){ return ['educandos']; }
+      if(rol==='padre' || rol==='padres'){ return ['padres']; }
+      return [];
+    }
+    function fmtHoraMsg(iso){
+      var d=new Date(iso), hoy=new Date();
+      var hora=d.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
+      return d.toDateString()===hoy.toDateString() ? hora : d.toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit'})+' '+hora;
+    }
+    function nombreChat(c){
+      if(c.tipo==='directo'){ return MSG.nombres[MSG.otros[c.id]] || 'Chat directo'; }
+      return c.nombre || 'Canal';
     }
 
-    function vKraal(){
-      var h='<h1 class="page-title">Kraal del grupo</h1><p class="page-subtitle">Equipo de responsables.</p>';
-      h+='<p style="font-size:12px;color:var(--gris-500);margin:0 0 14px;">Actuando como: <b>'+esc(nombreActor(publicarComo))+'</b> (cámbialo en el Corcho)</p>';
-      h+='<div class="campo-scout kraal-campo">';
-      h+=lineaKraal('Equipo de grupo',['jefatura']);
-      h+=lineaKraal('Gestión',['secretaria','tesoreria']);
-      h+=lineaKraal('Comisiones',['ap','af','imagen','intendencia','relaciones']);
-      h+=lineaKraal('Equipos de rama',RAMAS.map(function(r){ return 'coord_'+r.id; }));
-      h+='</div>';
+    async function cargarChats(){
+      var yo=MSG.yo, lista=[], r;
+      // Canales de rama según rol y rama
+      var subs=subtiposPermitidos(yo);
+      if(yo.rama_id && subs.length){
+        r=await db.from('chats').select('*').eq('tipo','rama').eq('rama_id',yo.rama_id).in('subtipo',subs);
+        if(r.error) throw r.error;
+        lista=lista.concat(r.data||[]);
+      }
+      // Chats directos donde participo
+      r=await db.from('chat_participantes').select('chat_id').eq('usuario_id',yo.id);
+      if(r.error) throw r.error;
+      var ids=(r.data||[]).map(function(p){return p.chat_id;});
+      MSG.otros={};
+      if(ids.length){
+        r=await db.from('chats').select('*').eq('tipo','directo').in('id',ids);
+        if(r.error) throw r.error;
+        var directos=r.data||[];
+        lista=lista.concat(directos);
+        if(directos.length){
+          r=await db.from('chat_participantes').select('chat_id,usuario_id').in('chat_id',directos.map(function(c){return c.id;})).neq('usuario_id',yo.id);
+          if(r.error) throw r.error;
+          var faltan=[];
+          (r.data||[]).forEach(function(p){
+            MSG.otros[p.chat_id]=p.usuario_id;
+            if(!MSG.nombres[p.usuario_id] && faltan.indexOf(p.usuario_id)<0){ faltan.push(p.usuario_id); }
+          });
+          if(faltan.length){
+            var rn=await db.from('usuarios_perfiles').select('id,nombre_pedagogico').in('id',faltan);
+            if(rn.error) throw rn.error;
+            (rn.data||[]).forEach(function(u){ MSG.nombres[u.id]=u.nombre_pedagogico; });
+          }
+        }
+      }
+      MSG.chats=lista;
+    }
+
+    async function cargarMensajes(){
+      if(!MSG.chatId) return;
+      try{
+        var r=await db.from('mensajes').select('*').eq('chat_id',MSG.chatId).order('creado_en',{ascending:false}).limit(200);
+        if(r.error) throw r.error;
+        MSG.mensajes=(r.data||[]).reverse();
+        var faltan=[];
+        MSG.mensajes.forEach(function(m){ if(!MSG.nombres[m.emisor_id] && faltan.indexOf(m.emisor_id)<0){ faltan.push(m.emisor_id); } });
+        if(faltan.length){
+          var rn=await db.from('usuarios_perfiles').select('id,nombre_pedagogico').in('id',faltan);
+          if(rn.error) throw rn.error;
+          (rn.data||[]).forEach(function(u){ MSG.nombres[u.id]=u.nombre_pedagogico; });
+        }
+      }catch(err){
+        console.error('Error al cargar mensajes:',err);
+        toast('Error al cargar los mensajes',true);
+      }
+    }
+
+    async function abrirMensajes(){
+      vista='mensajes'; MSG.cargando=true; render();
+      try{
+        var ses=await db.auth.getSession();
+        var miId=ses.data.session.user.id;
+        var rp=await db.from('usuarios_perfiles').select('id,nombre_pedagogico,rol,rama_id,grupo_id').eq('id',miId).single();
+        if(rp.error) throw rp.error;
+        MSG.yo=rp.data;
+        MSG.nombres[MSG.yo.id]=MSG.yo.nombre_pedagogico;
+        await cargarChats();
+       if(!MSG.chats.some(function(c){return c.id===MSG.chatId;}) && !MSG.zonaChats[MSG.chatId]){ MSG.chatId=''; MSG.mensajes=[]; }
+        MSG.cargado=true;
+        await cargarMensajes();
+      }
+catch(err){
+        console.error('Error al abrir mensajes:',err);
+        MSG.cargado=false;
+        toast('Error al cargar los mensajes',true);
+      }
+      MSG.cargando=false; render();
+    }
+
+    async function abrirChat(id){
+  MSG.zonaEstado=null;
+  MSG.chatId=id; MSG.mensajes=[]; render();
+  await cargarMensajes();
+  suscribirChat(id);
+  render();
+}
+
+    async function enviarMensaje(texto){
+  texto=(texto||'').trim();
+  if(!texto || !MSG.chatId || MSG.enviando) return false;
+  MSG.enviando=true;
+  var ok=false;
+  try{
+    var r=await db.from('mensajes').insert({chat_id:MSG.chatId, emisor_id:MSG.yo.id, texto:texto}).select().single();
+    if(r.error) throw r.error;
+    if(!MSG.mensajes.some(function(x){return x.id===r.data.id;})){ MSG.mensajes.push(r.data); }
+    pintarHistorial();
+    ok=true;
+  }catch(err){
+    console.error('Error al enviar mensaje:',err);
+    toast('No se pudo enviar el mensaje',true);
+  }
+  MSG.enviando=false;
+  return ok;
+}
+
+    async function buscarUsuarios(q){
+      q=(q||'').trim(); MSG.busqueda=q;
+      if(q.length<2){ MSG.resultados=[]; pintarResultadosMsg(); return; }
+      try{
+        var qb=db.from('usuarios_perfiles').select('id,nombre_pedagogico,rol').neq('id',MSG.yo.id).ilike('nombre_pedagogico','%'+q.replace(/[%_\\]/g,'')+'%').limit(8);
+        if(MSG.yo.grupo_id){ qb=qb.eq('grupo_id',MSG.yo.grupo_id); }
+        var r=await qb;
+        if(r.error) throw r.error;
+        if(q!==MSG.busqueda) return; // llegó una búsqueda más nueva
+        MSG.resultados=r.data||[];
+        pintarResultadosMsg();
+      }catch(err){
+        console.error('Error al buscar usuarios:',err);
+        toast('Error al buscar personas',true);
+      }
+    }
+
+    async function crearChatDirecto(otroId,nombre){
+      try{
+        var r=await db.rpc('crear_chat_directo',{p_otro:otroId});
+        if(r.error) throw r.error;
+        MSG.nombres[otroId]=nombre;
+        MSG.resultados=[]; MSG.busqueda='';
+        await cargarChats();
+        await abrirChat(r.data);
+      }catch(err){
+        console.error('Error al crear chat directo:',err);
+        toast('No se pudo crear el chat',true);
+      }
+    }
+
+    function htmlResultadosMsg(){
+      if(MSG.busqueda.length<2) return '';
+      if(!MSG.resultados.length) return '<p class="msg-vacio">Sin resultados</p>';
+      return MSG.resultados.map(function(u){
+        return '<button class="msg-item" data-act="msg-nuevo" data-id="'+esc(u.id)+'" data-nombre="'+esc(u.nombre_pedagogico)+'"><span>'+esc(u.nombre_pedagogico)+'</span><small>'+esc(u.rol||'')+'</small></button>';
+      }).join('');
+    }
+    function pintarResultadosMsg(){
+      var box=document.getElementById('msg-resultados');
+      if(box){ box.innerHTML=htmlResultadosMsg(); }
+    }
+    function itemChat(c,etiqueta){
+      return '<button class="msg-item'+(c.id===MSG.chatId?' active':'')+'" data-act="msg-chat" data-id="'+esc(c.id)+'"><span>'+esc(etiqueta)+'</span></button>';
+    }
+/* ===== ESPACIOS DE TRABAJO + CHAT PULIDO ===== */
+function normNombre(s){return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().toLowerCase();}
+function esMiembro(z){
+  if(!MSG.yo) return false;
+  var yo=normNombre(MSG.yo.nombre_pedagogico);
+  return z.miembros.some(function(n){return normNombre(n)===yo;});
+}
+// Miembros del espacio y Jefatura. Si no quieres que Jefatura entre en todos, devuelve solo esMiembro(z).
+function puedeChatear(z){ return esMiembro(z) || (MSG.yo && MSG.yo.rol==='jefatura'); }
+
+function etiquetaZona(zid){
+  var com=COMISIONES.find(function(c){return c.id===zid;});
+  if(com){
+    var ev=EVENTOS.find(function(e){return e.id===com.evento;});
+    return com.nombre+(ev?' · '+ev.nombre:'');
+  }
+  return zonaInfo(zid).nombre;
+}
+function misZonas(){
+  var ids=CARGOS.map(function(c){return c.id;})
+    .concat(COMISIONES.map(function(c){return c.id;}))
+    .concat(RAMAS.map(function(r){return 'coord_'+r.id;}));
+  return ids.filter(function(id){return esMiembro(zonaInfo(id));}).map(function(id){
+    return {id:id, icono:zonaInfo(id).icono, nombre:etiquetaZona(id)};
+  });
+}
+function chatIdDeZona(zid){
+  for(var id in MSG.zonaChats){ if(MSG.zonaChats[id].zid===zid) return id; }
+  return '';
+}
+function zonaComoChat(id){
+  var z=MSG.zonaChats[id];
+  return z ? {id:id, tipo:'zona', nombre:z.nombre} : null;
+}
+function textoEstadoZona(){
+  var e=MSG.zonaEstado;
+  if(!e) return '';
+  if(e.estado==='cargando') return 'Abriendo el chat…';
+  if(e.estado==='denegado') return 'Este chat es solo para los miembros del espacio.';
+  if(e.estado==='error') return 'No se pudo abrir el chat. Inténtalo de nuevo.';
+  return '';
+}
+
+async function asegurarYo(){
+  if(MSG.yo) return;
+  var ses=await db.auth.getSession();
+  var rp=await db.from('usuarios_perfiles').select('id,nombre_pedagogico,rol,rama_id,grupo_id').eq('id',ses.data.session.user.id).single();
+  if(rp.error) throw rp.error;
+  MSG.yo=rp.data;
+  MSG.nombres[MSG.yo.id]=MSG.yo.nombre_pedagogico;
+}
+async function asegurarNombres(ids){
+  var faltan=ids.filter(function(i,ix){return i && !MSG.nombres[i] && ids.indexOf(i)===ix;});
+  if(!faltan.length) return;
+  var rn=await db.from('usuarios_perfiles').select('id,nombre_pedagogico').in('id',faltan);
+  if(rn.error) throw rn.error;
+  (rn.data||[]).forEach(function(u){ MSG.nombres[u.id]=u.nombre_pedagogico; });
+}
+
+function etiquetaDia(iso){
+  var d=new Date(iso), hoy=new Date(), ayer=new Date();
+  ayer.setDate(hoy.getDate()-1);
+  if(d.toDateString()===hoy.toDateString()) return 'Hoy';
+  if(d.toDateString()===ayer.toDateString()) return 'Ayer';
+  return d.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'});
+}
+function htmlBurbujas(){
+  if(!MSG.mensajes.length) return '<p class="msg-vacio">Aún no hay mensajes. ¡Escribe el primero!</p>';
+  var h='', dia='', prev=null;
+  MSG.mensajes.forEach(function(m){
+    var d=new Date(m.creado_en).toDateString();
+    if(d!==dia){ h+='<div class="msg-dia"><span>'+esc(etiquetaDia(m.creado_en))+'</span></div>'; dia=d; prev=null; }
+    var mio=(m.emisor_id===MSG.yo.id);
+    var seguido=prev && prev.emisor_id===m.emisor_id;
+    h+='<div class="msg-burbuja'+(mio?' mio':'')+'">';
+    if(!mio && !seguido){ h+='<div class="msg-meta"><b>'+esc(MSG.nombres[m.emisor_id]||'Alguien')+'</b></div>'; }
+    h+='<div class="msg-texto">'+esc(m.texto)+'</div>'
+      +'<div class="msg-hora">'+esc(new Date(m.creado_en).toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}))+'</div></div>';
+    prev=m;
+  });
+  return h;
+}
+// Actualiza solo el historial (no redibuja la app ni borra lo que escribes)
+function pintarHistorial(){
+  var hh=document.getElementById('msg-hist');
+  if(!hh) return;
+  var abajo=(hh.scrollHeight-hh.scrollTop-hh.clientHeight)<80;
+  hh.innerHTML=htmlBurbujas();
+  if(abajo) hh.scrollTop=hh.scrollHeight;
+}
+function htmlPanelChat(titulo){
+  return '<div class="msg-chat-head">'+esc(titulo)+'</div>'
+    +'<div class="msg-hist" id="msg-hist">'+htmlBurbujas()+'</div>'
+    +'<form id="msg-form" class="msg-form"><input id="msg-texto" name="texto" placeholder="Escribe un mensaje…" maxlength="2000" autocomplete="off" required><button type="submit" class="btn-primary">Enviar</button></form>';
+}
+
+// Tiempo real: los mensajes nuevos aparecen sin recargar
+function suscribirChat(id){
+  if(MSG.canal){ db.removeChannel(MSG.canal); MSG.canal=null; }
+  MSG.canal=db.channel('chat-'+id)
+    .on('postgres_changes',{event:'INSERT',schema:'public',table:'mensajes',filter:'chat_id=eq.'+id},async function(payload){
+      var m=payload.new;
+      if(MSG.chatId!==id) return;
+      if(m.id && MSG.mensajes.some(function(x){return x.id===m.id;})) return;
+      MSG.mensajes.push(m);
+      try{ await asegurarNombres([m.emisor_id]); }catch(e){ console.error(e); }
+      pintarHistorial();
+    })
+    .subscribe();
+}
+
+// Abre (o crea) el chat de un espacio
+async function abrirChatZona(zid){
+  var est={zid:zid, estado:'cargando'};
+  MSG.zonaEstado=est;
+  try{
+    await asegurarYo();
+    if(!puedeChatear(zonaInfo(zid))){
+      est.estado='denegado';
+    } else {
+      var r=await db.rpc('abrir_chat_zona',{p_zona:zid, p_nombre:etiquetaZona(zid)});
+      if(r.error) throw r.error;
+      if(MSG.zonaEstado!==est) return;
+      MSG.zonaChats[r.data]={zid:zid, nombre:etiquetaZona(zid)};
+      MSG.chatId=r.data; MSG.mensajes=[];
+      await cargarMensajes();
+      if(MSG.zonaEstado!==est) return;
+      suscribirChat(r.data);
+      est.estado='ok';
+    }
+  }catch(err){
+    console.error('Error al abrir el chat del espacio:',err);
+    est.estado='error';
+  }
+  if(MSG.zonaEstado===est && (vista==='zona' || vista==='mensajes')){ render(); }
+}
+
+// Panel "Espacio de trabajo" que se muestra dentro de cada espacio
+function htmlChatZona(zid){
+  var e=MSG.zonaEstado;
+  var h='<div class="card"><div class="card-header"><h2 class="card-title">💬 Espacio de trabajo</h2></div>';
+  if(!e || e.zid!==zid || e.estado==='cargando'){ h+='<p class="msg-vacio">Abriendo el chat…</p>'; }
+  else if(e.estado==='denegado'){ h+='<p class="msg-vacio">Este chat es solo para los miembros del espacio.</p>'; }
+  else if(e.estado==='error'){ h+='<p class="msg-vacio">No se pudo abrir el chat. <button class="btn-secondary" data-act="zona-reintentar" data-id="'+esc(zid)+'">Reintentar</button></p>'; }
+  else { h+='<div class="zona-chat-box">'+htmlPanelChat(etiquetaZona(zid))+'</div>'; }
+  return h+'</div>';
+}
+    function vMensajes(){
+      var h='<h1 class="page-title">Mensajes</h1><p class="page-subtitle">Canales de rama y chats directos.</p>';
+      if(MSG.cargando){ return h+'<div class="card empty-state"><p>Cargando…</p></div>'; }
+      if(!MSG.cargado){ return h+'<div class="card empty-state"><p>No se han podido cargar los mensajes.</p><button class="btn-primary" data-act="msg-reintentar">Reintentar</button></div>'; }
+
+      h+='<div class="msg-layout"><aside class="card msg-lista">';
+      h+='<input type="search" id="msg-buscar" class="msg-buscar" placeholder="Buscar persona…" autocomplete="off" value="'+esc(MSG.busqueda)+'">';
+      h+='<div id="msg-resultados">'+htmlResultadosMsg()+'</div>';
+
+      var hayRama=false;
+      RAMAS.forEach(function(r){
+        var cs=MSG.chats.filter(function(c){return c.tipo==='rama' && c.rama_id===r.id;});
+        if(!cs.length) return;
+        hayRama=true;
+        h+='<div class="msg-grupo">'+esc(r.nombre.toUpperCase())+'</div>';
+        ['monitores','educandos','padres'].forEach(function(sub){
+          cs.filter(function(c){return c.subtipo===sub;}).forEach(function(c){ h+=itemChat(c,ETQ_SUBTIPO[sub]); });
+        });
+      });
+      if(!hayRama && !MSG.yo.rama_id){ h+='<p class="msg-vacio">Tu perfil no tiene rama asignada.</p>'; }
+var zs=misZonas();
+if(zs.length){
+  h+='<div class="msg-grupo">MIS ESPACIOS</div>';
+  zs.forEach(function(z){
+    var activo=(MSG.chatId && chatIdDeZona(z.id)===MSG.chatId);
+    h+='<button class="msg-item'+(activo?' active':'')+'" data-act="msg-zona" data-id="'+esc(z.id)+'"><span>'+z.icono+' '+esc(z.nombre)+'</span></button>';
+  });
+}
+      var directos=MSG.chats.filter(function(c){return c.tipo==='directo';});
+      if(directos.length){
+        h+='<div class="msg-grupo">DIRECTOS</div>';
+        directos.forEach(function(c){ h+=itemChat(c,nombreChat(c)); });
+      }
+      h+='</aside>';
+
+      h+='<section class="card msg-chat">';
+var chat=MSG.chats.find(function(c){return c.id===MSG.chatId;}) || zonaComoChat(MSG.chatId);
+if(!chat){
+  h+='<div class="empty-state" style="margin:auto;"><div class="icon">💬</div><p>'+(textoEstadoZona()||'Elige un chat de la izquierda.')+'</p></div>';
+} else {
+  h+=htmlPanelChat(chat.tipo==='rama' ? (chat.nombre||'') : nombreChat(chat));
+}
+h+='</section></div>';
       return h;
     }
-    function vPadres(){ return '<h1 class="page-title">Padres</h1><p class="page-subtitle">Representantes de familias.</p><div class="card empty-state"><div class="icon">👨‍👩‍👧</div><p>No hay familias registradas.</p></div>'; }
+    function postRenderMensajes(){
+      var hh=document.getElementById('msg-hist');
+      if(hh){ hh.scrollTop=hh.scrollHeight; }
+      var t=document.getElementById('msg-texto');
+      if(t && window.innerWidth>768){ t.focus(); }
+    }
     function vViejosLobos(){ return '<h1 class="page-title">Viejos Lobos</h1><p class="page-subtitle">Antiguos miembros.</p><div class="card empty-state"><div class="icon">🐺</div><p>No hay viejos lobos registrados.</p></div>'; }
 
-    function render(){
-      var h='<header class="header"><div class="logo"><div class="logo-icon">🍃</div><span>ScoutPath</span><span class="logo-sub">GRUPO BETA</span></div><div class="header-right"><div class="session-select"><label for="curso">Curso</label><select id="curso"><option>2026-2027</option></select></div><div class="avatar">GB</div></div></header><div class="app-body"><nav class="sidebar">';
+        function render(){
+      var h='<header class="header">';
+      h+='  <div class="logo"><div class="logo-icon">🍃</div><span>ScoutPath</span><span class="logo-sub">GRUPO BETA</span></div>';
+      h+='  <div class="header-right">';
+      h+='    <div class="session-select"><label for="curso">Curso</label><select id="curso"><option>2026-2027</option></select></div>';
+      
+      // NUEVOS BOTONES DE LA ESQUINA
+      h+='    <button class="btn-header-icon" title="Notificaciones" data-act="notificaciones">🔔</button>';
+    h+='    <button class="btn-header-icon" title="Ir al Chat" data-act="vista" data-id="mensajes">💬</button>';
+      h+='    <div class="avatar" style="cursor:pointer;" title="Mi carta personal" data-act="mi-carta">M</div>';
+      
+      h+='  </div>';
+      h+='</header>';
+      
+      h+='<div class="app-body"><nav class="sidebar">';
       VISTAS.forEach(function(v){
-        h+='<button class="sidebar-item'+(v.id===vista?' active':'')+'" data-act="vista" data-id="'+v.id+'"><span class="icon">'+v.icon+'</span>'+v.txt+'</button>';
+        h+='<button class="sidebar-item'+(v.id===(vista==='zona'?zonaOrigen:vista)?' active':'')+'" data-act="vista" data-id="'+v.id+'"><span class="icon">'+v.icon+'</span>'+v.txt+'</button>';
       });
       h+='</nav><main class="main-panel">';
+      
       if (vista === 'ramas' && !filtroRama) { vista = 'corcho'; }
-      h+= vista==='zona'?vZona():vista==='corcho'?vCorcho():vista==='ramas'?vRamas():vista==='educandos'?vEducandos():vista==='kraal'?vKraal():vista==='padres'?vPadres():vista==='viejoslobos'?vViejosLobos():vCorcho();
-      h+='</main></div>';
-      root.innerHTML=h;
-    }
+      
+            // AQUÍ SE DECIDE QUÉ PINTAR EN EL PANEL PRINCIPAL
+      if (vista === 'mensajes') {
+        h += vMensajes();
+      } else {
+        h += vista==='corcho'?vCorcho():vista==='ramas'?vRamas():vista==='educandos'?vEducandos():vista==='kraal'?vKraal():vista==='zona'?vZona():vista==='padres'?vPadres():vista==='viejoslobos'?vViejosLobos():vCorcho();
+      }
 
+      h+='</main></div>';
+      root.innerHTML = h;
+
+            if(vista === 'mensajes'){ postRenderMensajes(); }
+      if(vista === 'zona'){ var hz=document.getElementById('msg-hist'); if(hz){ hz.scrollTop=hz.scrollHeight; } }
+    }
     function abrirModal(titulo,campos,tipo){
       modalRoot.innerHTML='<div class="modal-backdrop"><form class="modal" data-tipo="'+tipo+'"><h2 class="modal-title">'+titulo+'</h2>'+campos+'<div class="modal-actions"><button type="button" class="btn-secondary" data-act="cerrar">Cancelar</button><button type="submit" class="btn-primary">Guardar</button></div></form></div>';
       modalRoot.querySelector('input')?.focus();
@@ -814,11 +1787,44 @@ input,select,textarea{font-family:inherit;}
       if(!el)return;
       var act=el.getAttribute('data-act'),id=el.getAttribute('data-id');
 
-      if(act==='cerrar'){ cerrarModal(); return; }
-      if(act==='vista'){ vista=id; if(id==='ramas') filtroRama=''; render(); return; }
-      if(act==='zona'){ zona=id; vista='zona'; render(); return; }
-      if(act==='ver-rama'){ filtroRama=id; vista='ramas'; render(); return; }
+      // Botón de editar (los 3 puntos)
+      if(act==='editar-persona'){ 
+        abrirModal('Editar Persona', '<p style="text-align:center; padding:20px;">Aquí podrás cambiar la foto y el nombre de <b>'+id+'</b>.</p>', 'editar_persona'); 
+        return; 
+      }
+      
+      // Botón de enviar mensaje (el sobre): abre Mensajes buscando a esa persona
+if(act==='msg-persona'){
+  vista='mensajes';
+  MSG.busqueda=el.getAttribute('data-nombre')||'';
+  abrirMensajes().then(function(){ buscarUsuarios(MSG.busqueda); });
+  return;
+}
+      if(act==='ir-chat'){
+        vista='mensajes'; 
+        if(typeof abrirMensajes === 'function') { abrirMensajes(); } 
+        else { render(); }
+        return;
+      }
+      if(act==='mi-carta'){
+        perfilKey='k:María'; // De momento abre el perfil de María como prueba
+        tabPerfil='grafico';
+        pintarPerfil();
+        return;
+      }
+      if(act==='notificaciones'){
+        toast('No tienes notificaciones nuevas');
+        return;
+      }
 
+      if(act==='cerrar'){ cerrarModal(); return; }
+            if(act==='vista'){ vista=id; if(id==='ramas') filtroRama=''; if(id==='mensajes'){ abrirMensajes(); return; } render(); return; }
+     if(act==='zona'){ zonaOrigen=(vista==='zona'?zonaOrigen:vista); zona=id; vista='zona'; render(); abrirChatZona(id); return; }
+      if(act==='ver-rama'){ filtroRama=id; vista='ramas'; render(); return; }
+      if(act==='msg-chat'){ abrirChat(id); return; }
+      if(act==='msg-nuevo'){ crearChatDirecto(id, el.getAttribute('data-nombre')); return; }
+      if(act==='zona-reintentar'){ abrirChatZona(id); render(); return; }
+if(act==='msg-zona'){ abrirChatZona(id); MSG.chatId=''; MSG.mensajes=[]; render(); return; }
       if(act==='cal-prev'){ calMes--; if(calMes<0){ calMes=11; calAnio--; } render(); return; }
       if(act==='cal-next'){ calMes++; if(calMes>11){ calMes=0; calAnio++; } render(); return; }
       if(act==='cal-hoy'){ var hoyNow=new Date(); calAnio=hoyNow.getFullYear(); calMes=hoyNow.getMonth(); calDia=iso(calAnio,calMes,hoyNow.getDate()); render(); return; }
@@ -864,7 +1870,7 @@ input,select,textarea{font-family:inherit;}
       if(act==='borrar-nota'){
         menuAbierto='';
         if(!confirm('¿Eliminar esta nota?')){ render(); return; }
-        S.notas=S.notas.filter(function(n){return n.id!==id;}); guardar(); render(); return;
+        S.notas=S.notas.filter(function(n){return n.id!==id;}); borrarEnNube('notas',id); guardar(); render(); return;
       }
       if(act==='apuntar'){
         var nota=S.notas.find(function(x){return x.id===id;});
@@ -887,8 +1893,8 @@ input,select,textarea{font-family:inherit;}
         return;
       }
 
-      if(act==='borrar-educando'){ S.educandos=S.educandos.filter(function(e){return e.id!==id;}); guardar(); render(); return; }
-      if(act==='borrar-mision'){ S.misiones=S.misiones.filter(function(m){return m.id!==id;}); guardar(); render(); return; }
+      if(act==='borrar-educando'){ S.educandos=S.educandos.filter(function(e){return e.id!==id;}); borrarEnNube('educandos',id); guardar(); render(); return; }
+      if(act==='borrar-mision'){ S.misiones=S.misiones.filter(function(m){return m.id!==id;}); borrarEnNube('misiones',id); guardar(); render(); return; }
     });
 
     document.addEventListener('click',function(ev){
@@ -916,7 +1922,22 @@ input,select,textarea{font-family:inherit;}
       };
       rd.readAsDataURL(ev.target.files[0]);
     });
+    document.addEventListener('input',function(ev){
+      if(ev.target.id!=='msg-buscar') return;
+      var q=ev.target.value;
+      clearTimeout(tBusca);
+      tBusca=setTimeout(function(){ buscarUsuarios(q); },300);
+    });
 
+    document.addEventListener('submit',function(ev){
+  if(ev.target.id!=='msg-form') return;
+  ev.preventDefault();
+  var inp=ev.target.elements.texto;
+  enviarMensaje(inp.value).then(function(ok){
+    if(ok){ inp.value=''; }
+    inp.focus();
+  });
+});
     document.addEventListener('submit',function(ev){
       var f=ev.target;
       if(!f.matches('form[data-tipo]'))return;
@@ -962,9 +1983,19 @@ input,select,textarea{font-family:inherit;}
       guardar(); cerrarModal(); render();
     });
 
-    render();
+        // Mostramos un mensaje de carga
+    root.innerHTML = '<div style="display:flex; justify-content:center; align-items:center; height:100vh; font-family:sans-serif; color:#1E3A8A;">Cargando datos del grupo...</div>';
+    
+    cargarDatosNube().then(function(){
+      render();
+    });
   }
 })();
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js'));
+}
 </script>
 </body>
 </html>
